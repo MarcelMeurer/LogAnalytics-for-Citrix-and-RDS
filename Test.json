@@ -1,0 +1,364 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.3.0",
+    "parameters": {      
+        "workspaceName": {
+            "type": "string"
+        },
+        "workspaceRegionId": {
+            "type": "string"
+        },
+        "solutionName": {
+            "type": "string",
+            "defaultValue": "Delivery Group Availability for XenApp and XenDesktop"
+        },
+        "accountName": {
+            "type": "string",
+            "metadata": {
+                "description": "A valid Azure Automation account name"
+            }
+        },
+        "regionId": {
+            "type": "string",
+            "metadata": {
+                "description": "Region of the Azure Automation account"
+            }
+        },
+        "pricingTier": {
+            "type": "string",
+            "metadata": {
+                "description": "Pricing tier of both Log Analytics workspace and Azure Automation account"
+            }
+        }
+
+    },
+    "variables": {
+        "SolutionVersion": "1.0",
+        "SolutionPublisher": "Citrix Systems, Inc.",
+        "SolutionName": "Delivery Group Availability for XenApp and XenDesktop",
+        "LogAnalyticsApiVersion": "2015-11-01-preview",
+        "ViewAuthor":  "Citrix Systems, Inc.",
+        "ViewDescription":  "Monitors Delivery Group availability in the Citrix XenApp and XenDesktop environment.",
+        "ViewName":  "Delivery Group Availability for XenApp and XenDesktop"
+    },
+    "resources": [
+        {
+            "name": "[concat(variables('SolutionName'), '[' ,parameters('workspacename'), ']')]",
+            "location": "[parameters('workspaceRegionId')]",
+            "tags": { },
+            "type": "Microsoft.OperationsManagement/solutions",
+            "apiVersion": "[variables('LogAnalyticsApiVersion')]",
+            "dependsOn": [
+                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspacename'), '/views/', variables('ViewName'))]"
+            ],
+            "properties": {
+                "workspaceResourceId": "[concat(resourceGroup().id, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspacename'))]",
+                "referencedResources": [
+                ],
+                "containedResources": [
+                    "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspaceName'), variables('ViewName'))]"
+                ]
+            },
+            "plan": {
+                "name": "[concat(variables('SolutionName'), '[' ,parameters('workspaceName'), ']')]",
+                "Version": "[variables('SolutionVersion')]",
+                "product": "CitrixXAXDDeliveryGroupAvailability",
+                "publisher": "[variables('SolutionPublisher')]",
+                "promotionCode": ""
+            }
+        },
+        {
+            "apiVersion": "[variables('LogAnalyticsApiVersion')]",
+            "name": "[concat(parameters('workspaceName'), '/', variables('ViewName'))]",
+            "type": "Microsoft.OperationalInsights/workspaces/views",
+            "location": "[parameters('workspaceregionId')]",
+            "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'),'/views/', variables('ViewName'))]",
+            "dependson": [
+            ],
+            "properties": {
+                "Id": "[variables('ViewName')]",
+                "Name": "[variables('ViewName')]",
+                "DisplayName": "[variables('ViewName')]",
+                "Description": "[variables('ViewDescription')]",
+                "Author": "[variables('ViewAuthor')]",
+                "Source": "Local",
+                "Dashboard": [
+                    {
+                        "Id": "TwoNumberTileListBuilderBlade",
+                        "Type": "Blade",
+                        "Version": 0,
+                        "Configuration": {
+                            "General": {
+                                "title": "Delivery group availability",
+                                "newGroup": false,
+                                "icon": "",
+                                "useIcon": false
+                            },
+                            "Tile": {
+                                "Legend": "Low availability (<90%)",
+                                "Query": "Type=Citrix_XAXD_DG_CL  | EXTEND if(DGIsAvailable_b,100,0) as AV| measure avg(AV) as Available by SiteName_s, DGName_s | where Available < 90"
+                            },
+                            "SecondTile": {
+                                "Legend": "High availability (>90%)",
+                                "Query": "Type=Citrix_XAXD_DG_CL  | EXTEND if(DGIsAvailable_b,100,0) as AV| measure avg(AV) as Available by SiteName_s, DGName_s | where Available >= 90"
+                            },
+                            "List": {
+                                "Query": "Type=Citrix_XAXD_DG_CL  | EXTEND if(DGIsAvailable_b,100,0) as AV| measure avg(AV) as Available by SiteName_s, DGName_s | sort Available asc",
+                                "HideGraph": true,
+                                "enableSparklines": false,
+                                "operation": "Summary",
+                                "ColumnsTitle": {
+                                    "Name": "Site",
+                                    "Value": "Avail (%)"
+                                },
+                                "Color": "#0072c6",
+                                "thresholds": {
+                                    "isEnabled": true,
+                                    "values": [
+                                        {
+                                            "name": "Normal",
+                                            "threshold": "Default",
+                                            "color": "#ba141a",
+                                            "isDefault": true
+                                        },
+                                        {
+                                            "name": "Warning",
+                                            "threshold": "70",
+                                            "color": "#fcd116",
+                                            "isDefault": false
+                                        },
+                                        {
+                                            "name": "Error",
+                                            "threshold": "90",
+                                            "color": "#007233",
+                                            "isDefault": false
+                                        }
+                                    ]
+                                },
+                                "NameDSVSeparator": "",
+                                "NavigationQuery": "Type=Citrix_XAXD_DG_CL  | EXTEND if(DGIsAvailable_b,100,0) as AV| measure avg(AV) as Available by SiteName_s, DGName_s | display LineChart"
+                            }
+                        }
+                    },
+                    {
+                        "Id": "LineChartBuilderBlade",
+                        "Type": "Blade",
+                        "Version": 0,
+                        "Configuration": {
+                            "General": {
+                                "title": "Ready Desktops",
+                                "newGroup": false,
+                                "icon": "",
+                                "useIcon": false
+                            },
+                            "Header": {
+                                "Title": "Number of ready desktops",
+                                "Subtitle": "by Desktop OS Delivery Group"
+                            },
+                            "LineChart": {
+                                "Query": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=SingleSession) | measure avg(DGDesktopsAvailable_d) by SiteName_s, DGName_s interval 10minutes",
+                                "yAxis": {
+                                    "isLogarithmic": false,
+                                    "units": {
+                                        "baseUnitType": "",
+                                        "baseUnit": "",
+                                        "displayUnit": ""
+                                    },
+                                    "customLabel": ""
+                                }
+                            },
+                            "List": {
+                                "Query": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=SingleSession) | measure avg(DGDesktopsAvailable_d) as ReadyDesktops by SiteName_s, DGName_s | sort ReadyDesktops asc ",
+                                "HideGraph": false,
+                                "enableSparklines": true,
+                                "operation": "Summary",
+                                "ColumnsTitle": {
+                                    "Name": "Site",
+                                    "Value": "Ready desktops"
+                                },
+                                "Color": "#0072c6",
+                                "thresholds": {
+                                    "isEnabled": false,
+                                    "values": [
+                                        {
+                                            "name": "Normal",
+                                            "threshold": "Default",
+                                            "color": "#009e49",
+                                            "isDefault": true
+                                        },
+                                        {
+                                            "name": "Warning",
+                                            "threshold": "60",
+                                            "color": "#fcd116",
+                                            "isDefault": false
+                                        },
+                                        {
+                                            "name": "Error",
+                                            "threshold": "90",
+                                            "color": "#ba141a",
+                                            "isDefault": false
+                                        }
+                                    ]
+                                },
+                                "NameDSVSeparator": "",
+                                "NavigationQuery": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=SingleSession) | measure avg(DGDesktopsAvailable_d) by SiteName_s, DGName_s interval 10minutes"
+                            }
+                        }
+                    },
+                    {
+                        "Id": "LineChartBuilderBlade",
+                        "Type": "Blade",
+                        "Version": 0,
+                        "Configuration": {
+                            "General": {
+                                "title": "Desktop OS Delivery Group usage",
+                                "newGroup": false,
+                                "icon": "",
+                                "useIcon": false
+                            },
+                            "Header": {
+                                "Title": "Usage (%)",
+                                "Subtitle": "by random Desktop OS Delivery Group"
+                            },
+                            "LineChart": {
+                                "Query": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=SingleSession) (DGType_s=Shared) | measure max(DGCapacityUsage_d) by SiteName_s, DGName_s ",
+                                "yAxis": {
+                                    "isLogarithmic": false,
+                                    "units": {
+                                        "baseUnitType": "",
+                                        "baseUnit": "",
+                                        "displayUnit": ""
+                                    },
+                                    "customLabel": ""
+                                }
+                            },
+                            "List": {
+                                "Query": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=SingleSession) (DGType_s=Shared) | measure max(DGCapacityUsage_d) by SiteName_s, DGName_s ",
+                                "HideGraph": false,
+                                "enableSparklines": false,
+                                "operation": "Summary",
+                                "ColumnsTitle": {
+                                    "Name": "Site",
+                                    "Value": "Max Usage (%)"
+                                },
+                                "Color": "#0072c6",
+                                "thresholds": {
+                                    "isEnabled": true,
+                                    "values": [
+                                        {
+                                            "name": "Normal",
+                                            "threshold": "Default",
+                                            "color": "#009e49",
+                                            "isDefault": true
+                                        },
+                                        {
+                                            "name": "Warning",
+                                            "threshold": "60",
+                                            "color": "#fcd116",
+                                            "isDefault": false
+                                        },
+                                        {
+                                            "name": "Error",
+                                            "threshold": "90",
+                                            "color": "#ba141a",
+                                            "isDefault": false
+                                        }
+                                    ]
+                                },
+                                "NameDSVSeparator": "",
+                                "NavigationQuery": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=SingleSession) (DGType_s=Shared) |  measure max(DGCapacityUsage_d) by SiteName_s, DGName_s | display linechart"
+                            }
+                        }
+                    },
+                    {
+                        "Id": "LineChartBuilderBlade",
+                        "Type": "Blade",
+                        "Version": 0,
+                        "Configuration": {
+                            "General": {
+                                "title": "Server OS Delivery Group usage",
+                                "newGroup": false,
+                                "icon": "",
+                                "useIcon": false
+                            },
+                            "Header": {
+                                "Title": "Load / Capacity Usage (%)",
+                                "Subtitle": "by Server OS Delivery Group"
+                            },
+                            "LineChart": {
+                                "Query": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=MultiSession) | measure max(DGCapacityUsage_d) by SiteName_s, DGName_s ",
+                                "yAxis": {
+                                    "isLogarithmic": false,
+                                    "units": {
+                                        "baseUnitType": "",
+                                        "baseUnit": "",
+                                        "displayUnit": ""
+                                    },
+                                    "customLabel": ""
+                                }
+                            },
+                            "List": {
+                                "Query": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=MultiSession) | measure max(DGCapacityUsage_d) by SiteName_s, DGName_s",
+                                "HideGraph": false,
+                                "enableSparklines": false,
+                                "ColumnsTitle": {
+                                    "Name": "Site",
+                                    "Value": "Max Usage (%)"
+                                },
+                                "Color": "#0072c6",
+                                "operation": "Summary",
+                                "thresholds": {
+                                    "isEnabled": true,
+                                    "values": [
+                                        {
+                                            "name": "Normal",
+                                            "threshold": "Default",
+                                            "color": "#009e49",
+                                            "isDefault": true
+                                        },
+                                        {
+                                            "name": "Warning",
+                                            "threshold": "60",
+                                            "color": "#fcd116",
+                                            "isDefault": false
+                                        },
+                                        {
+                                            "name": "Error",
+                                            "threshold": "90",
+                                            "color": "#ba141a",
+                                            "isDefault": false
+                                        }
+                                    ]
+                                },
+                                "NameDSVSeparator": "",
+                                "NavigationQuery": "Type=Citrix_XAXD_DG_CL (DGSessionSupport_s=MultiSession) |  measure max(DGCapacityUsage_d) by SiteName_s, DGName_s | display linechart"
+                            }
+                        }
+                    }
+                ],
+                "OverviewTile": {
+                    "Id": "DoubleNumberBuilderTile",
+                    "Type": "OverviewTile",
+                    "Version": 0,
+                    "Configuration": {
+                        "TileOne": {
+                            "Legend": "Low availability",
+                            "Query": "Type=Citrix_XAXD_DG_CL  | EXTEND if(DGIsAvailable_b,100,0) as AV| measure avg(AV) as Available by SiteName_s, DGName_s | where Available < 90"
+                        },
+                        "TileTwo": {
+                            "Legend": "High availability",
+                            "Query": "Type=Citrix_XAXD_DG_CL  | EXTEND if(DGIsAvailable_b,100,0) as AV| measure avg(AV) as Available by SiteName_s, DGName_s | where Available >= 90"
+                        },
+                        "Advanced": {
+                            "DataFlowVerification": {
+                                "Enabled": true,
+                                "Query": "Type=Citrix_XAXD_DG_CL | measure count() by DGName_s",
+                                "Message": "Ensure that the Citrix Agent for OMS for XenApp and XenDesktop is installed and configured for data collection."
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
