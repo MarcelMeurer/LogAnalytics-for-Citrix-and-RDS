@@ -28,6 +28,7 @@
 "westcentralus",
 "japaneast"
     ],
+    "defaultValue": "westeurope",
             "metadata": {
                 "description": "Region of the Azure Automation account"
             }
