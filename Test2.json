@@ -6,19 +6,6 @@
             "type": "string"
         },
         "workspaceRegionId": {
-            "type": "string"
-        },
-        "solutionName": {
-            "type": "string",
-            "defaultValue": "Delivery Group Availability for XenApp and XenDesktop"
-        },
-        "accountName": {
-            "type": "string",
-            "metadata": {
-                "description": "A valid Azure Automation account name"
-            }
-        },
-        "regionId": {
             "type": "string",
              "allowedValues": [
 "eastus",
@@ -29,9 +16,10 @@
 "japaneast"
     ],
     "defaultValue": "westeurope",
-            "metadata": {
-                "description": "Region of the Azure Automation account"
-            }
+        },
+        "solutionName": {
+            "type": "string",
+            "defaultValue": "Delivery Group Availability for XenApp and XenDesktop"
         },
         "pricingTier": {
             "type": "string",
