@@ -348,7 +348,7 @@
                         },
                         "Advanced": {
                             "DataFlowVerification": {
-                                "Enabled": true,
+                                "Enabled": false,
                                 "Query": "Type=Citrix_XAXD_DG_CL | measure count() by DGName_s",
                                 "Message": "Ensure that the Citrix Agent for OMS for XenApp and XenDesktop is installed and configured for data collection."
                             }
