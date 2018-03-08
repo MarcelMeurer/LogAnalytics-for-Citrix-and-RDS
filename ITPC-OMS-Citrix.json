@@ -2,17 +2,17 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "xlocation": {
+        "location": {
             "type": "string",
             "defaultValue": "" 
         },
-        "xresourcegroup": {
+        "resourcegroup": {
           "type": "string",
           "defaultValue": ""
         },
-      "xsubscriptionId": {
+      "subscriptionId": {
         "type": "string",
-        "defaultValue": ""
+        "defaultValue": "{subscription-id}"
       },
         "workspace": {
             "type": "string",
