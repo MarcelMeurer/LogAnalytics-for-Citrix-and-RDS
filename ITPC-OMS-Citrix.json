@@ -6,28 +6,13 @@
             "type": "string",
             "defaultValue": "" 
         },
-        "resourcegroup": {
-          "type": "string",
-          "defaultValue": ""
-        },
-      "ba1yyyyyxxxsubscriptionId": {
-        "type": "string",
-        "defaultValue": "{subscription-id}"
-      },
         "workspace": {
             "type": "string",
             "defaultValue": ""
-        },
-        "workspaceapiversion": {
-            "type": "string",
-            "defaultValue": "2017-03-15-preview"
         }
     },
 	"variables": {
-        "workspaceapiversion": {
-            "type": "string",
-            "defaultValue": "2017-03-15-preview"
-        }
+        "workspaceapiversion": "defaultValue": "2017-03-15-preview"
     },
     "resources": [
         {
