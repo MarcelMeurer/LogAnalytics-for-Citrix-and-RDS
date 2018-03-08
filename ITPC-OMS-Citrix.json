@@ -10,7 +10,7 @@
           "type": "string",
           "defaultValue": ""
         },
-      "a1yyyyyxxxsubscriptionId": {
+      "ba1yyyyyxxxsubscriptionId": {
         "type": "string",
         "defaultValue": "{subscription-id}"
       },
@@ -23,9 +23,15 @@
             "defaultValue": "2017-03-15-preview"
         }
     },
+	"variables": {
+        "workspaceapiversion": {
+            "type": "string",
+            "defaultValue": "2017-03-15-preview"
+        }
+    },
     "resources": [
         {
-            "apiVersion": "[parameters('workspaceapiversion')]",
+            "apiVersion": "[variables('workspaceapiversion')]",
             "name": "[parameters('workspace')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",
