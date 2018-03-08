@@ -11,8 +11,8 @@ After the depoyment:
 - Set the retention time of your workspace (default: 30 days)
 - Set the DPOR number (http://loganalytics.sepago.com/installation.html)
 
-## Coming soon: Deploy a full OMS workspace for RDS to your Azure subscription
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-Citrix.json" target="_blank">
+## Deploy a full OMS workspace for RDS to your Azure subscription
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-RDS.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
