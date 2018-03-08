@@ -8,7 +8,15 @@
         },
         "workspace": {
             "type": "string",
-            "defaultValue": ""
+            "allowedValues": [
+				"eastus",
+				"westeurope",
+				"southeastasia",
+				"australiasoutheast",
+				"westcentralus",
+				"japaneast"
+			],
+		"defaultValue": "westeurope",
         }
     },
 	"variables": {
