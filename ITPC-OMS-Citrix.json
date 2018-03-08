@@ -10,7 +10,7 @@
           "type": "string",
           "defaultValue": ""
         },
-      "subscriptionId": {
+      "xxxsubscriptionId": {
         "type": "string",
         "defaultValue": "{subscription-id}"
       },
@@ -31,7 +31,7 @@
             "location": "[parameters('location')]",
             "properties": {"sku": {"Name": "Standalone"},"retentionInDays": 360},
             
-            "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+            "id": "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
             
           "resources": [
 {
@@ -39,9 +39,9 @@
     "name":  "Citrix Processes",
     "type":  "views",
     "location":  "[parameters('location')]",
-    "id":  "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Processes')]",
+    "id":  "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Processes')]",
     "dependson":  [
-                      "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                      "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
                   ],
     "properties":  {
                        "Id":  "Citrix Processes",
@@ -633,9 +633,9 @@
     "name":  "Citrix Sessions",
     "type":  "views",
     "location":  "[parameters('location')]",
-    "id":  "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]",
+    "id":  "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]",
     "dependson":  [
-                      "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                      "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
                   ],
     "properties":  {
                        "Id":  "Citrix Sessions",
@@ -1261,9 +1261,9 @@
     "name":  "Citrix Users",
     "type":  "views",
     "location":  "[parameters('location')]",
-    "id":  "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Users')]",
+    "id":  "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Users')]",
     "dependson":  [
-                      "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                      "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
                   ],
     "properties":  {
                        "Id":  "Citrix Users",
@@ -1877,9 +1877,9 @@
     "name":  "Citrix Workers",
     "type":  "views",
     "location":  "[parameters('location')]",
-    "id":  "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Workers')]",
+    "id":  "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Workers')]",
     "dependson":  [
-                      "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                      "[Concat('/subscriptions/', {subscription-id}, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
                   ],
     "properties":  {
                        "Id":  "Citrix Workers",
