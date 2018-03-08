@@ -6,6 +6,10 @@ The agents combine data from different sources and send them to your OMS Log Ana
 
 Go to http://loganalytics.sepago.com to download the agent and learn more.
 
+After the depoyment:
+- Install and configure the agents
+- Set the retention time of your workspace (default: 30 days)
+- Set the DPOR number (http://loganalytics.sepago.com/installation.html)
 
 ## Deploy a full OMS workspace for RDS to your Azure subscription
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-Citrix.json" target="_blank">
