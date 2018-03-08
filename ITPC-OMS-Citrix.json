@@ -4,10 +4,6 @@
     "parameters": {
         "location": {
             "type": "string",
-            "defaultValue": "" 
-        },
-        "workspace": {
-            "type": "string",
             "allowedValues": [
 				"eastus",
 				"westeurope",
@@ -17,6 +13,10 @@
 				"japaneast"
 			],
 		"defaultValue": "westeurope",
+        },
+        "workspace": {
+            "type": "string",
+            "defaultValue": "enterAuniqueDnsHostName"
         }
     },
 	"variables": {
