@@ -29,7 +29,7 @@
             "name": "[parameters('workspace')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",
-            "properties": {"sku": {"Name": "Free"}},
+            "properties": {"sku": {"Name": "Standard"},"retention": 360},
             
             "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
             
