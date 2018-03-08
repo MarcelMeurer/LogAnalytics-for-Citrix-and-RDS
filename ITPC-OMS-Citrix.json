@@ -12,7 +12,7 @@
         }
     },
 	"variables": {
-        "workspaceapiversion": "defaultValue": "2017-03-15-preview"
+        "workspaceapiversion": "2017-03-15-preview"
     },
     "resources": [
         {
