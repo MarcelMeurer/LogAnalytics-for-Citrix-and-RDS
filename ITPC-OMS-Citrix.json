@@ -16,7 +16,7 @@
         },
         "workspace": {
             "type": "string",
-            "defaultValue": "enterAuniqueDnsHostNameX"
+            "defaultValue": "enterAuniqueDnsHostName"
         }
     },
 	"variables": {
@@ -45,7 +45,7 @@
     "properties":  {
                        "Id":  "Citrix Processes",
                        "Name":  "Citrix Processes",
-                       "Author":  "marcel.meurer@sepago.de",
+                       "Author":  "Marcel.Meurer@sepago.de",
                        "Source":  "Local",
                        "Version":  2,
                        "Dashboard":  [
@@ -520,7 +520,7 @@
                                                                                   "Subtitle":  "Byte/s"
                                                                               },
                                                                    "LineChart":  {
-                                                                                     "Query":  "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(IODataBytesPersec_d) by Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\"  |measure max(IODataBytesPersec_d) by Name_s",
+                                                                                     "Query":  "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(IODataBytesPersec_d) by Name_s// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\"  |measure max(IODataBytesPersec_d) by Name_s",
                                                                                      "Callout":  {
                                                                                                      "Title":  "Avg",
                                                                                                      "Series":  "",
@@ -540,7 +540,7 @@
                                                                                                           }
                                                                                  },
                                                                    "List":  {
-                                                                                "Query":  "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(IODataBytesPersec_d) by Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\"  |measure max(IODataBytesPersec_d) by Name_s",
+                                                                                "Query":  "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(IODataBytesPersec_d) by Name_s// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\"  |measure max(IODataBytesPersec_d) by Name_s",
                                                                                 "HideGraph":  false,
                                                                                 "enableSparklines":  true,
                                                                                 "operation":  "Summary",
@@ -573,9 +573,9 @@
                                                                                                               ]
                                                                                                },
                                                                                 "NameDSVSeparator":  "",
-                                                                                "NavigationQuery":  "search in (ITPC_CTX_Process_CL) {selected item} | summarize IO_BpS = max(IODataBytesPersec_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL | measure max(IODataBytesPersec_d) as IO_BpS by UserName_s,Worker_s | display LineChart",
+                                                                                "NavigationQuery":  "search {selected item} | sort by TimeGenerated desc",
                                                                                 "NavigationSelect":  {
-
+                                                                                                         "NavigationQuery":  "search {selected item} | sort by TimeGenerated desc"
                                                                                                      }
                                                                             }
                                                                }
@@ -639,7 +639,7 @@
     "properties":  {
                        "Id":  "Citrix Sessions",
                        "Name":  "Citrix Sessions",
-                       "Author":  "marcel.meurer@sepago.de",
+                       "Author":  "Marcel.Meurer@sepago.de",
                        "Source":  "Local",
                        "Version":  2,
                        "Dashboard":  [
@@ -1267,7 +1267,7 @@
     "properties":  {
                        "Id":  "Citrix Site and Applications",
                        "Name":  "Citrix Site and Applications",
-                       "Author":  "marcel.meurer@sepago.de",
+                       "Author":  "Marcel.Meurer@sepago.de",
                        "Source":  "Local",
                        "Version":  2,
                        "Dashboard":  [
@@ -1883,7 +1883,7 @@
     "properties":  {
                        "Id":  "Citrix Workers",
                        "Name":  "Citrix Workers",
-                       "Author":  "marcel.meurer@sepago.de",
+                       "Author":  "Marcel.Meurer@sepago.de",
                        "Source":  "Local",
                        "Version":  2,
                        "Dashboard":  [
@@ -1926,6 +1926,7 @@
                                                                                 "Query":  "ITPC_CTX_PerfData_CL | where Category == \"Processor Information\" and Counter_s == \"% Processor Time\" | summarize AggregatedValue = avg(value_d) by Worker_s | sort by Worker_s asc// Oql: Type=ITPC_CTX_PerfData_CL Category:\"Processor Information\" Counter_s:\"% Processor Time\"  | measure avg(value_d) by Worker_s | sort Worker_s",
                                                                                 "HideGraph":  false,
                                                                                 "enableSparklines":  true,
+                                                                                "operation":  "Summary",
                                                                                 "ColumnsTitle":  {
                                                                                                      "Name":  "Worker",
                                                                                                      "Value":  "%"
@@ -2354,17 +2355,16 @@
                                                                                    "useIcon":  false
                                                                                },
                                                                    "Tile":  {
-                                                                                "Query":  "ITPC_CTX_PerfData_CL | distinct Worker_s\r\n| count // Oql: Type=ITPC_CTX_PerfData_CL | distinct Worker_s",
                                                                                 "Legend":  "Worker Count",
+                                                                                "Query":  "ITPC_CTX_PerfData_CL | distinct Worker_s| count // Oql: Type=ITPC_CTX_PerfData_CL | distinct Worker_s",
                                                                                 "NavigationSelect":  {
 
                                                                                                      }
                                                                             },
                                                                    "List":  {
-                                                                                "Query":  "ITPC_CTX_PerfData_CL | summarize AggregatedValue = dcount(Worker_s) by DesktopGroup_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL|measure countdistinct(Worker_s) by DesktopGroup_s",
+                                                                                "Query":  "ITPC_CTX_PerfData_CL | summarize AggregatedValue = dcount(Worker_s) by DesktopGroup_s// Oql: Type=ITPC_CTX_PerfData_CL|measure countdistinct(Worker_s) by DesktopGroup_s",
                                                                                 "HideGraph":  false,
                                                                                 "enableSparklines":  true,
-                                                                                "operation":  "Summary",
                                                                                 "ColumnsTitle":  {
                                                                                                      "Name":  "DesktopGroup",
                                                                                                      "Value":  "#"
@@ -2394,9 +2394,9 @@
                                                                                                               ]
                                                                                                },
                                                                                 "NameDSVSeparator":  "",
-                                                                                "NavigationQuery":  "search {selected item}\r\n// Oql: {selected item}",
+                                                                                "NavigationQuery":  "search {selected item} | sort by TimeGenerated desc",
                                                                                 "NavigationSelect":  {
-
+                                                                                                         "NavigationQuery":  "search {selected item} | sort by TimeGenerated desc"
                                                                                                      }
                                                                             }
                                                                }
@@ -2412,7 +2412,7 @@
                                             "Configuration":  {
                                                                   "Tile":  {
                                                                                "Legend":  "Are reporting to Log Analytics",
-                                                                               "Query":  "ITPC_CTX_PerfData_CL | where TimeGenerated \u003e ago(30m) | distinct Worker_s\r\n| count // Oql: Type=ITPC_CTX_PerfData_CL TimeGenerated\u003eNOW-30MINUTES | distinct Worker_s"
+                                                                               "Query":  "ITPC_CTX_PerfData_CL | where TimeGenerated \u003e ago(30m) | distinct Worker_s| count // Oql: Type=ITPC_CTX_PerfData_CL TimeGenerated\u003eNOW-30MINUTES | distinct Worker_s"
                                                                            },
                                                                   "Advanced":  {
                                                                                    "DataFlowVerification":  {
