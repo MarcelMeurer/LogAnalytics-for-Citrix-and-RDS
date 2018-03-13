@@ -16,7 +16,7 @@
         },
         "workspace": {
             "type": "string",
-            "defaultValue": "enterAuniqueDnsHostName"
+            "defaultValue": "enterAuniqueDnsHostNameX"
         }
     },
 	"variables": {
@@ -1257,15 +1257,15 @@
 ,
 {
     "apiVersion":  "2015-11-01-preview",
-    "name":  "Citrix Users",
+    "name":  "Citrix Site and Applications",
     "type":  "views",
     "location":  "[parameters('location')]",
-    "id":  "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Users')]",
+    "id":  "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Site and Applications')]",
     "dependson":  [
                       "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
                   ],
     "properties":  {
-                       "Id":  "Citrix Users",
+                       "Id":  "Citrix Site and Applications",
                        "Name":  "Citrix Site and Applications",
                        "Author":  "marcel.meurer@sepago.de",
                        "Source":  "Local",
@@ -2418,7 +2418,7 @@
                                                                                    "DataFlowVerification":  {
                                                                                                                 "Enabled":  true,
                                                                                                                 "Query":  "Type=ITPC_CTX_PerfData_CL | measure count() ",
-                                                                                                                "Message":  "There are no data now. Make sure that you have installed the agents (http://loganalytics.sepago.com).\n\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme. "
+                                                                                                                "Message":  "There are no data know. Make sure that you have installed the agents (http://loganalytics.sepago.com).\n\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme. "
                                                                                                             }
                                                                                }
                                                               }
