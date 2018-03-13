@@ -2418,7 +2418,7 @@
                                                                                    "DataFlowVerification":  {
                                                                                                                 "Enabled":  true,
                                                                                                                 "Query":  "Type=ITPC_CTX_PerfData_CL | measure count() ",
-                                                                                                                "Message":  "There are no data know. Make sure that you have installed the agents (http://loganalytics.sepago.com).\n\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme. "
+                                                                                                                "Message":  "There are no data now. Make sure that you have installed the agents (http://loganalytics.sepago.com).\n\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme. "
                                                                                                             }
                                                                                }
                                                               }
