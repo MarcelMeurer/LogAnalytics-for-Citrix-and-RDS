@@ -36,7 +36,7 @@
     {
       "name": "[variables('omsSolutions').customSolution.solutionName]",
       "type": "Microsoft.OperationsManagement/solutions",
-      "apiVersion": "2015-11-01-preview",
+      "apiVersion": "2017-03-03-preview",
       "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
@@ -55,11 +55,7 @@
         "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
         "referencedResources": [],
         "containedResources": [
-          "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]",
-          "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
-          "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
-          "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
-          "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
+          "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]"
         ]
       }
     },
@@ -79,9 +75,9 @@
 
       "resources": [
         {
-          "apiVersion": "2015-11-01-preview",
-          "name": "[concat(parameters('workspace'), '/', 'Citrix Processes')]",
-          "type": "Microsoft.OperationalInsights/workspaces/views",
+          "apiVersion": "2017-03-03-preview",
+          "name": "Citrix Processes",
+          "type": "views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Processes')]",
           "dependson": [
@@ -672,9 +668,9 @@
           }
         },
         {
-          "apiVersion": "2015-11-01-preview",
-          "name": "[concat(parameters('workspace'), '/', 'Citrix Sessions')]",
-          "type": "Microsoft.OperationalInsights/workspaces/views",
+          "apiVersion": "2017-03-03-preview",
+          "name": "Citrix Sessions",
+          "type": "views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]",
           "dependson": [
@@ -1299,9 +1295,9 @@
           }
         },
         {
-          "apiVersion": "2015-11-01-preview",
-          "name": "[concat(parameters('workspace'), '/', 'Citrix Site and Applications')]",
-          "type": "Microsoft.OperationalInsights/workspaces/views",
+          "apiVersion": "2017-03-03-preview",
+          "name": "Citrix Site and Applications",
+          "type": "views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Site and Applications')]",
           "dependson": [
@@ -1914,9 +1910,9 @@
           }
         },
         {
-          "apiVersion": "2015-11-01-preview",
-          "name": "[concat(parameters('workspace'), '/', 'Citrix Workers')]",
-          "type": "Microsoft.OperationalInsights/workspaces/views",
+          "apiVersion": "2017-03-03-preview",
+          "name": "Citrix Workers",
+          "type": "views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Workers')]",
           "dependson": [
