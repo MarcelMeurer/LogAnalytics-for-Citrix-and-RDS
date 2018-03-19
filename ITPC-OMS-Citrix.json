@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName4"
+      "defaultValue": "enterAuniqueDnsHostName5"
     }
   },
   "variables": {
@@ -33,6 +33,34 @@
     }
   },
   "resources": [
+    {
+      "name": "[variables('omsSolutions').customSolution.solutionName]",
+      "type": "Microsoft.OperationsManagement/solutions",
+      "apiVersion": "2015-11-01-preview",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+        "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
+        "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
+        "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
+        "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
+      ],
+      "plan": {
+        "name": "[variables('omsSolutions').customSolution.solutionName]",
+        "product": "[variables('omsSolutions').customSolution.name]",
+        "publisher": "[variables('omsSolutions').customSolution.publisher]",
+        "promotionCode": ""
+      },
+      "properties": {
+        "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+        "referencedResources": [],
+        "containedResources": [
+          "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]"
+        ]
+      }
+    },
+
+
     {
       "apiVersion": "[variables('workspaceapiversion')]",
       "name": "[parameters('workspace')]",
@@ -2434,34 +2462,8 @@
               }
             }
           }
-        },
-
-        {
-          "name": "[variables('omsSolutions').customSolution.solutionName]",
-          "type": "Microsoft.OperationsManagement/solutions",
-          "apiVersion": "2015-11-01-preview",
-          "location": "[parameters('location')]",
-          "dependsOn": [
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
-          ],
-          "plan": {
-            "name": "[variables('omsSolutions').customSolution.solutionName]",
-            "product": "[variables('omsSolutions').customSolution.name]",
-            "publisher": "[variables('omsSolutions').customSolution.publisher]",
-            "promotionCode": ""
-          },
-          "properties": {
-            "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
-            "referencedResources": [],
-            "containedResources": [
-              "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]"
-            ]
-          }
         }
+
 
 
       ]
