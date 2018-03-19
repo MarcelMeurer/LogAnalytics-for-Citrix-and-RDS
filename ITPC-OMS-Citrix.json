@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9f"
+      "defaultValue": "enterAuniqueDnsHostName9g"
     }
   },
   "variables": {
@@ -648,7 +648,7 @@
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]",
           "dependson": [
-            "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+            "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Processes')]"
           ],
           "properties": {
             "Id": "Citrix Sessions",
@@ -1275,7 +1275,7 @@
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Site and Applications')]",
           "dependson": [
-            "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+            "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]"
           ],
           "properties": {
             "Id": "Citrix Site and Applications",
@@ -1890,7 +1890,7 @@
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Workers')]",
           "dependson": [
-            "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+            "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Site and Applications')]"
           ],
           "properties": {
             "Id": "Citrix Workers",
@@ -2435,32 +2435,6 @@
                 }
               }
             }
-          }
-        },
-        {
-          "name": "[variables('omsSolutions').customSolution.solutionName]",
-          "type": "Microsoft.OperationsManagement/solutions",
-          "apiVersion": "2017-03-03-preview",
-          "location": "[parameters('location')]",
-          "dependsOn": [
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
-            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
-            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
-            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
-            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
-          ],
-          "plan": {
-            "name": "[variables('omsSolutions').customSolution.solutionName]",
-            "product": "[variables('omsSolutions').customSolution.name]",
-            "publisher": "[variables('omsSolutions').customSolution.publisher]",
-            "promotionCode": ""
-          },
-          "properties": {
-            "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
-            "referencedResources": [],
-            "containedResources": [
-              "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]"
-            ]
           }
         }
 
