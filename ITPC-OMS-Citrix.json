@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName8"
+      "defaultValue": "enterAuniqueDnsHostName9"
     }
   },
   "variables": {
@@ -80,7 +80,7 @@
       "resources": [
         {
           "apiVersion": "2015-11-01-preview",
-          "name": "Citrix Processes",
+          "name": "[concat(parameters('workspace'), '/', 'Citrix Processes')]",
           "type": "Microsoft.OperationalInsights/workspaces/views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Processes')]",
@@ -673,7 +673,7 @@
         },
         {
           "apiVersion": "2015-11-01-preview",
-          "name": "Citrix Sessions",
+          "name": "[concat(parameters('workspace'), '/', 'Citrix Sessions')]",
           "type": "Microsoft.OperationalInsights/workspaces/views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]",
@@ -1300,7 +1300,7 @@
         },
         {
           "apiVersion": "2015-11-01-preview",
-          "name": "Citrix Site and Applications",
+          "name": "[concat(parameters('workspace'), '/', 'Citrix Site and Applications')]",
           "type": "Microsoft.OperationalInsights/workspaces/views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Site and Applications')]",
@@ -1915,7 +1915,7 @@
         },
         {
           "apiVersion": "2015-11-01-preview",
-          "name": "Citrix Workers",
+          "name": "[concat(parameters('workspace'), '/', 'Citrix Workers')]",
           "type": "Microsoft.OperationalInsights/workspaces/views",
           "location": "[parameters('location')]",
           "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Workers')]",
