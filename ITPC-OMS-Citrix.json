@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName3"
+      "defaultValue": "enterAuniqueDnsHostName4"
     }
   },
   "variables": {
@@ -2444,7 +2444,7 @@
           "dependsOn": [
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Citrix Sessions')]",
+            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
           ],
