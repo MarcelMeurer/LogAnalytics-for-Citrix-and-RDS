@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName1"
+      "defaultValue": "enterAuniqueDnsHostName2"
     }
   },
   "variables": {
@@ -2443,7 +2443,7 @@
           "location": "[parameters('location')]",
           "dependsOn": [
             "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
-            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', variables('omsSolutions').customSolution.name)]"
+            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]"
           ],
           "plan": {
             "name": "[variables('omsSolutions').customSolution.solutionName]",
