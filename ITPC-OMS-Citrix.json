@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName5"
+      "defaultValue": "enterAuniqueDnsHostName6"
     }
   },
   "variables": {
@@ -55,7 +55,11 @@
         "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
         "referencedResources": [],
         "containedResources": [
-          "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]"
+          "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]",
+          "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
+          "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
+          "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
+          "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
         ]
       }
     },
