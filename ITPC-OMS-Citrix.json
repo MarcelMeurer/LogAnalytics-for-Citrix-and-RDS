@@ -16,11 +16,11 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9d"
+      "defaultValue": "enterAuniqueDnsHostName9f"
     }
   },
   "variables": {
-    "workspaceapiversion": "2017-03-15-preview",
+    "workspaceapiversion": "2017-04-26-preview",
     "omsSolutions": {
       "customSolution": {
         "name": "Citrix Super Monitoring",
@@ -2435,6 +2435,32 @@
                 }
               }
             }
+          }
+        },
+        {
+          "name": "[variables('omsSolutions').customSolution.solutionName]",
+          "type": "Microsoft.OperationsManagement/solutions",
+          "apiVersion": "2017-03-03-preview",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Workers')]",
+            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Sessions')]",
+            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Processes')]",
+            "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'), '/views/', 'Citrix Site and Applications')]"
+          ],
+          "plan": {
+            "name": "[variables('omsSolutions').customSolution.solutionName]",
+            "product": "[variables('omsSolutions').customSolution.name]",
+            "publisher": "[variables('omsSolutions').customSolution.publisher]",
+            "promotionCode": ""
+          },
+          "properties": {
+            "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+            "referencedResources": [],
+            "containedResources": [
+              "[resourceId('Microsoft.OperationalInsights/workspaces/views/', parameters('workspace'), variables('omsSolutions').customSolution.name)]"
+            ]
           }
         }
 
