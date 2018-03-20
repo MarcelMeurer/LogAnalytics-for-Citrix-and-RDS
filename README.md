@@ -8,7 +8,7 @@ Go to http://loganalytics.sepago.com to download the agent and learn more.
 
 After the depoyment:
 - Install and configure the agents
-- Set the retention time of your workspace (default: 30 days)
+- Set the retention time of your workspace (default: 360 days)
 - Set the DPOR number (http://loganalytics.sepago.com/installation.html)
 
 ## Deploy a full OMS workspace for RDS to your Azure subscription
