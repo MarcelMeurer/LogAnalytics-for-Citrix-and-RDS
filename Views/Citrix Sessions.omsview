@@ -1,0 +1,638 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "resourcegroup": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "workspace": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "workspaceapiversion": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('workspaceapiversion')]",
+            "name": "[parameters('workspace')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "location": "[parameters('location')]",
+            "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+            "resources": [
+                {
+                    "apiVersion": "2015-11-01-preview",
+                    "name": "Citrix Sessions",
+                    "type": "views",
+                    "location": "[parameters('location')]",
+                    "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Sessions')]",
+                    "dependson": [
+                        "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                    ],
+                    "properties": {
+                        "Id": "Citrix Sessions",
+                        "Name": "Citrix Sessions",
+                        "Author": "Marcel.Meurer@sepago.de",
+                        "Source": "Local",
+                        "Version": 2,
+                        "Dashboard": [
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Citrix Sessions",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Citrix Sessions",
+                                        "Subtitle": "Unique Sessions State"
+                                    },
+                                    "Donut": {
+                                        "Query": "ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Terminal Services\" and Counter_s == \"Active Sessions\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "ColumnsTitle": {
+                                            "Name": "Worker",
+                                            "Value": "Active"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Logon Duration",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Logon Duration",
+                                        "Subtitle": "in seconds"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_Session_CL | where ConnectionState_s == \"Active\" | summarize Duration = avg(LogonDuration_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | where Duration > 0 | render timechart// Oql: Type=ITPC_CTX_Session_CL ConnectionState_s=\"Active\"|measure avg(LogonDuration_d) as Duration by Worker_s | where Duration>0|display LineChart",
+                                        "Callout": {
+                                            "Title": "Avg per hour",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Session_CL | where ConnectionState_s == \"Active\" | summarize Duration = avg(LogonDuration_d) by UserName_s | where Duration > 0|order by Duration desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "seconds"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "50",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "120",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Output Bandwidth",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Bandwidth per Worker",
+                                        "Subtitle": "bit/s"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg ",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s|order by  AggregatedValue desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "bit/s"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "200000",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "1000000",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_PerfData_CL | where ( Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" and {selected item} )   | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_PerfData_CL | where ( Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" and {selected item} )   | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Input Bandwidth",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Bandwidth per Worker",
+                                        "Subtitle": "bit/s"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "bit/s"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\"  and {selected item} | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\"  and {selected item} | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Latency",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Latency per Worker",
+                                        "Subtitle": "ms"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s|order by AggregatedValue desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "ms"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "350",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "600",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" and {selected item} | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" and {selected item} | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Output Line Speed",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Output Line Speed per Worker",
+                                        "Subtitle": "bit/s"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s | order by AggregatedValue desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "Default",
+                                                    "color": "#ba141a",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "1000000",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "2000000",
+                                                    "color": "#009e49",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" and {selected item} | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart ",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" and {selected item} | summarize AggregatedValue = avg(value_d) by TimeGenerated  | render timechart "
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutStackedBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Maximum Values",
+                                        "newGroup": true
+                                    },
+                                    "charts": [
+                                        {
+                                            "Header": {
+                                                "Title": "Maximum Output Bandwidth",
+                                                "Subtitle": "bit/s"
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        },
+                                        {
+                                            "Header": {
+                                                "Title": "Maximum Input Bandwidth",
+                                                "Subtitle": "bit/s"
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        },
+                                        {
+                                            "Header": {
+                                                "Title": "Maximum Latency",
+                                                "Subtitle": "ms"
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "Id": "NotableQueriesBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Query List",
+                                        "newGroup": false,
+                                        "preselectedFilters": "Type, Computer",
+                                        "renderMode": "grid"
+                                    },
+                                    "queries": [
+                                        {
+                                            "query": "ITPC_CTX_Session_CL | where TimeGenerated > ago(60m) | sort by TimeGenerated desc, UserName_s asc",
+                                            "displayName": "Connection List (Last 60 Minutes)"
+                                        },
+                                        {
+                                            "query": "ITPC_CTX_Session_CL | distinct ClientName_s",
+                                            "displayName": "Client Station Names"
+                                        },
+                                        {
+                                            "query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc",
+                                            "displayName": "Session Output Bandwidth for a specific User"
+                                        },
+                                        {
+                                            "query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc",
+                                            "displayName": "Session Latency for a specific User"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "Filters": [],
+                        "OverviewTile": {
+                            "Id": "SingleQueryDonutBuilderTileV1",
+                            "Type": "OverviewTile",
+                            "Version": 2,
+                            "Configuration": {
+                                "Donut": {
+                                    "Query": "ITPC_CTX_Session_CL | where TimeGenerated > ago(60m) | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_Session_CL  TimeGenerated>NOW-60MINUTES | measure countdistinct(SessionHash_s) by ConnectionState_s",
+                                    "CenterLegend": {
+                                        "Text": "Active",
+                                        "Operation": "Sum",
+                                        "ArcsToSelect": [
+                                            "Active"
+                                        ]
+                                    },
+                                    "Options": {
+                                        "colors": [
+                                            "#00188f",
+                                            "#0072c6",
+                                            "#00bcf2"
+                                        ],
+                                        "valueColorMapping": [],
+                                        "legend": true,
+                                        "skipLegendPositioning": true,
+                                        "center": true,
+                                        "unitType": "Count",
+                                        "fromUnit": "Ones"
+                                    },
+                                    "HideOtherLegend": true
+                                },
+                                "Advanced": {
+                                    "DataFlowVerification": {
+                                        "Enabled": false,
+                                        "Query": "search *\r\n// Oql: *",
+                                        "Message": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

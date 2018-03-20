@@ -1,0 +1,612 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "resourcegroup": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "workspace": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "workspaceapiversion": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "[parameters('workspaceapiversion')]",
+            "name": "[parameters('workspace')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "location": "[parameters('location')]",
+            "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+            "resources": [
+                {
+                    "apiVersion": "2015-11-01-preview",
+                    "name": "Citrix Site and Applications",
+                    "type": "views",
+                    "location": "[parameters('location')]",
+                    "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/Citrix Site and Applications')]",
+                    "dependson": [
+                        "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                    ],
+                    "properties": {
+                        "Id": "Citrix Site and Applications",
+                        "Name": "Citrix Site and Applications",
+                        "Author": "Marcel.Meurer@sepago.de",
+                        "Source": "Local",
+                        "Version": 2,
+                        "Dashboard": [
+                            {
+                                "Id": "NumberTileListBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Citrix Site",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Tile": {
+                                        "Legend": "Unique User",
+                                        "Query": "ITPC_CTX_Session_CL | distinct UserName_s| count // Oql: Type=ITPC_CTX_Session_CL | distinct UserName_s",
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | summarize Count = dcount(UserName_s) by DesktopGroup_s// Oql: Type=ITPC_CTX_PerfData_CL  | measure countdistinct(UserName_s) as Count by DesktopGroup_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "ColumnsTitle": {
+                                            "Name": "DesktopGroup",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "NumberTileListBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Applications",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Tile": {
+                                        "Query": "ITPC_CTX_Application_CL | where Event_s == \"crashed\" | summarize AggregatedValue = count() by Name_s\r\n| count // Oql: Type=ITPC_CTX_Application_CL Event_s:\"crashed\"|measure count () by Name_s",
+                                        "Legend": "Application Crashed",
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Application_CL | where Event_s == \"crashed\" | summarize AggregatedValue = count() by Name_s\r\n// Oql: Type=ITPC_CTX_Application_CL Event_s:\"crashed\"|measure count () by Name_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Application",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_Application_CL | where Event_s == \"crashed\" | render table\r\n// Oql: Type=ITPC_CTX_Application_CL Event_s=crashed | display Table",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Application by User",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Processor usage",
+                                        "Subtitle": "%"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Processor Information\" and Counter_s == \"% Processor Time\" | summarize AggregatedValue = avg(value_d) by Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"Processor Information\" Counter_s:\"% Processor Time\"|measure avg(value_d) by Worker_s",
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Process_CL | summarize AggregatedValue = avg(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL  |measure avg(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Username",
+                                            "Value": "%"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} | summarize AggregatedValue = max(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL  |measure max(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s | display linechart",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Application by User",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Memory available",
+                                        "Subtitle": "Byte"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Memory\" and Counter_s == \"Available Bytes\" | summarize AggregatedValue = avg(value_d) by Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"Memory\" Counter_s:\"Available Bytes\"|measure avg(value_d) by Worker_s",
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Process_CL | summarize AggregatedValue = avg(WorkingSet_d) by UserName_s, Worker_s, Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL  |measure avg(WorkingSet_d) by UserName_s, Worker_s, Name_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Username",
+                                            "Value": "Byte"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} | summarize AggregatedValue = max(WorkingSet_d) by UserName_s, Worker_s, Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL  |measure max(WorkingSet_d) by UserName_s, Worker_s, Name_s | display linechart",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Application Overall Consumption",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Processor Consumption",
+                                        "Subtitle": "Shared Ticks"
+                                    },
+                                    "Donut": {
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s | sort by AggregatedValue desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s | sort by AggregatedValue desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Process",
+                                            "Value": "S-Ticks"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" and {selected item}| summarize AggregatedValue = sum(PercentProcessorTime_d)  by UserName_s",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" and {selected item}| summarize AggregatedValue = sum(PercentProcessorTime_d)  by UserName_s"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Application Overall Consumption",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Memory Consumption",
+                                        "Subtitle": "Memory Ticks"
+                                    },
+                                    "Donut": {
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s | sort by AggregatedValue desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s | order by AggregatedValue desc ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Process",
+                                            "Value": "M-nTicks"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\"   and {selected item} | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\"   and {selected item} | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "User Overall Consumption",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Processor Consumption",
+                                        "Subtitle": "Shared Ticks"
+                                    },
+                                    "Donut": {
+                                        "Query": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s | order by AggregatedValue desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s | order by AggregatedValue desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Process",
+                                            "Value": "S-Ticks"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" and {selected item}| summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" and {selected item}| summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "User OVERALL CONSUMPTION",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Memory Consumption",
+                                        "Subtitle": "Memory Ticks"
+                                    },
+                                    "Donut": {
+                                        "Query": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s | sort by AggregatedValue desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s | order by AggregatedValue desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "Process",
+                                            "Value": "M-nTicks"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" and {selected item}| extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "ITPC_CTX_Process_CL | where UserName_s != \"\" and Name_s != \"System Idle Process\" and {selected item}| extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "Filters": [],
+                        "OverviewTile": {
+                            "Id": "SingleNumberBuilderTile",
+                            "Type": "OverviewTile",
+                            "Version": 2,
+                            "Configuration": {
+                                "Tile": {
+                                    "Legend": "Unique Users",
+                                    "Query": "ITPC_CTX_Process_CL | distinct UserName_s\r\n| count // Oql: Type=ITPC_CTX_Process_CL | distinct UserName_s"
+                                },
+                                "Advanced": {
+                                    "DataFlowVerification": {
+                                        "Enabled": false,
+                                        "Query": "search *\r\n// Oql: *",
+                                        "Message": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
