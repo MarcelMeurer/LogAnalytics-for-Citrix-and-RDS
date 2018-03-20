@@ -16,58 +16,35 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName1b"
+      "defaultValue": "enterAuniqueDnsHostName1e"
     }
   },
   "variables": {
     "workspaceapiversion": "2017-04-26-preview",
-    "omsSolutions": {
-      "customSolution": {
-        "name": "Citrix Super Monitoring",
-        "solutionName": "[concat('Citrix Super Monitoring', '[', parameters('workspace'), ']')]",
-        "publisher": "marcel.meurer@sepago.de",
-        "displayName": "Citrix Super Monitoring",
-        "description": "Citrix Super Monitoring Description",
-        "author": "marcel.meurer@sepago.de"
-      }
-    },
-	
-	  "omsviews": {
-		"defailt": [
-			"Citrix%20Processes.omsview",
-			"Citrix%20Sessions.omsview",
-			"Citrix%20Site%20and%20Applications.omsview",
-			"Citrix%20Workers.omsview"
-		],
-		"legacy": [
-			"CF%20-%20Etcd.omsview",
-			"CF%20-%20Etcd%20Operations.omsview"
-		],
-		"system_metrics": {
-			"oms_agent": "https://raw.githubusercontent.com/Azure/oms-agent-for-linux-boshrelease/master/docs/omsview/Syslog%20and%20Perf.omsview",
-			"hm_forwarder": "https://raw.githubusercontent.com/Azure/oms-log-analytics-firehose-nozzle/master/docs/omsview/CF%20KPI%20-%20System%20Metrics.omsview"
-		}
-	}
-
+    "OMSViews": {
+      "viewNames": [
+        "Citrix%20Processes.omsview",
+        "Citrix%20Sessions.omsview",
+        "Citrix%20Site%20and%20Applications.omsview",
+        "Citrix%20Workers.omsview"
+      ]
+    }
   },
+
   "resources": [
-
-
-
-
     {
       "apiVersion": "2017-05-10",
-      "name": "[replace(replace(variables('omsviews').defailt[copyIndex()], '%20', '_'), '_-_', '-')]",
+      "name": "[replace(variables('OMSViews').viewNames[copyIndex()], '%20', '_')]",
       "type": "Microsoft.Resources/deployments",
       "copy": {
         "name": "viewCopy",
-        "count": "[length(variables('omsviews').defailt)]",
+        "count": "[length(variables('OMSViews').viewNames)]",
         "mode": "Serial"
       },
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat('https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/', variables('omsviews').defailt[copyIndex()])]",
+          "uri": "[concat('https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/', variables('OMSViews').viewNames[copyIndex()])]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -76,10 +53,8 @@
           "resourcegroup": { "value": "[resourceGroup().name]" },
           "subscriptionId": { "value": "[subscription().subscriptionId]" },
           "workspaceapiversion": { "value": "[variables('workspaceapiversion')]" }
-
         }
       }
     }
-
   ]
 }
