@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9o"
+      "defaultValue": "enterAuniqueDnsHostName9p"
     }
   },
   "variables": {
@@ -39,7 +39,7 @@
 
     {
       "apiVersion": "2017-05-10",
-      "name": "linkedTemplate",
+      "name": "linkedTemplate1",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "incremental",
@@ -59,7 +59,7 @@
     },
 	    {
       "apiVersion": "2017-05-10",
-      "name": "linkedTemplate",
+      "name": "linkedTemplate2",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "incremental",
@@ -79,7 +79,7 @@
     },
 	    {
       "apiVersion": "2017-05-10",
-      "name": "linkedTemplate",
+      "name": "linkedTemplate3",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "incremental",
@@ -99,7 +99,7 @@
     },
 	    {
       "apiVersion": "2017-05-10",
-      "name": "linkedTemplate",
+      "name": "linkedTemplate4",
       "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "incremental",
