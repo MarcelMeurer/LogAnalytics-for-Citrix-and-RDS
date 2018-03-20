@@ -30,15 +30,14 @@
         "description": "Citrix Super Monitoring Description",
         "author": "marcel.meurer@sepago.de"
       }
-    }
+    },
 	
-	"omsviews": {
+	  "omsviews": {
 		"defailt": [
 			"Citrix%20Processes.omsview",
 			"Citrix%20Sessions.omsview",
 			"Citrix%20Site%20and%20Applications.omsview",
-			"Citrix%20Workers.omsview",
-
+			"Citrix%20Workers.omsview"
 		],
 		"legacy": [
 			"CF%20-%20Etcd.omsview",
