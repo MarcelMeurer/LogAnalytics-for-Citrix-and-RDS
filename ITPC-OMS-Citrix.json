@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9n"
+      "defaultValue": "enterAuniqueDnsHostName9m"
     }
   },
   "variables": {
@@ -45,6 +45,66 @@
         "mode": "incremental",
         "templateLink": {
           "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Processes.omsview",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "workspace": { "value": "[parameters('workspace')]" },
+          "location": { "value": "[parameters('location')]" },
+          "resourcegroup": { "value": "[resourceGroup().name]" },
+          "subscriptionId": { "value": "[subscription().subscriptionId]" },
+          "workspaceapiversion": { "value": "[variables('workspaceapiversion')]" }
+
+        }
+      }
+    },
+	    {
+      "apiVersion": "2017-05-10",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Sessions.omsview",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "workspace": { "value": "[parameters('workspace')]" },
+          "location": { "value": "[parameters('location')]" },
+          "resourcegroup": { "value": "[resourceGroup().name]" },
+          "subscriptionId": { "value": "[subscription().subscriptionId]" },
+          "workspaceapiversion": { "value": "[variables('workspaceapiversion')]" }
+
+        }
+      }
+    },
+	    {
+      "apiVersion": "2017-05-10",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Site%20and%20Applications.omsview",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "workspace": { "value": "[parameters('workspace')]" },
+          "location": { "value": "[parameters('location')]" },
+          "resourcegroup": { "value": "[resourceGroup().name]" },
+          "subscriptionId": { "value": "[subscription().subscriptionId]" },
+          "workspaceapiversion": { "value": "[variables('workspaceapiversion')]" }
+
+        }
+      }
+    },
+	    {
+      "apiVersion": "2017-05-10",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Workers.omsview",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
