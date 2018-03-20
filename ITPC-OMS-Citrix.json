@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9z"
+      "defaultValue": "enterAuniqueDnsHostName1a"
     }
   },
   "variables": {
@@ -74,7 +74,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('_omsViewsLocation'), '/', variables('omsviews').defailt[copyIndex()])]",
+          "uri": "[concat('https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/', variables('omsviews').defailt[copyIndex()])]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
