@@ -1865,7 +1865,7 @@
         "parameters": {
           "workspace": { "value": "[parameters('workspace')]" },
           "location": { "value": "[parameters('location')]" },
-          "resourcegroup": "[resourceGroup().name]",
+          "resourcegroup": "xxxxxxxxxxxx123xxxxxxxxxxxxxxxxxxxxx",
           "subscriptionId": "[subscription().subscriptionId]",
           "workspaceapiversion": { "value": "[variables('workspaceapiversion')]" }
 
