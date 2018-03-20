@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9q"
+      "defaultValue": "enterAuniqueDnsHostName9y"
     }
   },
   "variables": {
@@ -31,6 +31,32 @@
         "author": "marcel.meurer@sepago.de"
       }
     }
+	
+	"omsviews": {
+		"defailt": [
+			"Citrix%20Processes.omsview"",
+			"Citrix%20Sessions.omsview",
+			"Citrix%20Site%20and%20Applications.omsview",
+			"Citrix%20Workers.omsview",
+
+		],
+		"legacy": [
+			"CF%20-%20Etcd.omsview",
+			"CF%20-%20Etcd%20Operations.omsview"
+		],
+		"system_metrics": {
+			"oms_agent": "https://raw.githubusercontent.com/Azure/oms-agent-for-linux-boshrelease/master/docs/omsview/Syslog%20and%20Perf.omsview",
+			"hm_forwarder": "https://raw.githubusercontent.com/Azure/oms-log-analytics-firehose-nozzle/master/docs/omsview/CF%20KPI%20-%20System%20Metrics.omsview"
+		}
+	},
+	"_omsViewsLocation": {
+		"type": "string",
+		"defaultValue": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/",
+		"metadata": {
+			"description": "The base URI where OMS views required by this template are located"
+		}
+	}
+
   },
   "resources": [
 
