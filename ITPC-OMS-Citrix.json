@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9p"
+      "defaultValue": "enterAuniqueDnsHostName9q"
     }
   },
   "variables": {
