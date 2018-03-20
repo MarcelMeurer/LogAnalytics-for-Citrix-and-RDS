@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9h"
+      "defaultValue": "enterAuniqueDnsHostName9i"
     }
   },
   "variables": {
@@ -1863,7 +1863,12 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "workspace": { "value": "[parameters('workspace')]" }
+          "workspace": { "value": "[parameters('workspace')]" },
+          "location": { "value": "[parameters('location')]" },
+          "resourcegroup": "resourceGroup().name",
+          "subscriptionId": "subscription().subscriptionId",
+          "workspaceapiversion": { "value": "[variables('workspaceapiversion')]" }
+
         }
       }
     }
