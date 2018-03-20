@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName1a"
+      "defaultValue": "enterAuniqueDnsHostName1b"
     }
   },
   "variables": {
@@ -47,13 +47,6 @@
 			"oms_agent": "https://raw.githubusercontent.com/Azure/oms-agent-for-linux-boshrelease/master/docs/omsview/Syslog%20and%20Perf.omsview",
 			"hm_forwarder": "https://raw.githubusercontent.com/Azure/oms-log-analytics-firehose-nozzle/master/docs/omsview/CF%20KPI%20-%20System%20Metrics.omsview"
 		}
-	},
-	"_omsViewsLocation": {
-		"type": "string",
-		"defaultValue": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views",
-		"metadata": {
-			"description": "The base URI where OMS views required by this template are located"
-		}
 	}
 
   },
@@ -69,7 +62,7 @@
       "copy": {
         "name": "viewCopy",
         "count": "[length(variables('omsviews').defailt)]",
-        "mode": "Parallel"
+        "mode": "Serial"
       },
       "properties": {
         "mode": "Incremental",
