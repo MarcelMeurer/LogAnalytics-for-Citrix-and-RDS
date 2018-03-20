@@ -16,7 +16,7 @@
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName9j"
+      "defaultValue": "enterAuniqueDnsHostName9h"
     }
   },
   "variables": {
@@ -1861,6 +1861,9 @@
         "templateLink": {
           "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Processes.omsview",
           "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "workspace": { "value": "[parameters('workspace')]" }
         }
       }
     }
