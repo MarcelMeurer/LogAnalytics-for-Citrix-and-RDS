@@ -48,18 +48,7 @@
       "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
 
       "resources": [
-        {
-          "apiVersion": "2017-05-10",
-          "name": "linkedTemplate",
-          "type": "Microsoft.Resources/deployments",
-          "properties": {
-            "mode": "incremental",
-            "templateLink": {
-              "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Processes.omsview",
-              "contentVersion": "1.0.0.0"
-            }
-          }
-        },
+
         {
           "apiVersion": "2017-03-03-preview",
           "name": "Citrix Sessions",
@@ -1860,6 +1849,20 @@
 
 
       ]
+    },
+
+
+    {
+      "apiVersion": "2017-05-10",
+      "name": "linkedTemplate",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "https://raw.githubusercontent.com/MarcelMeurer/LogAnalytics-for-Citrix-and-RDS/master/Views/Citrix%20Processes.omsview",
+          "contentVersion": "1.0.0.0"
+        }
+      }
     }
 
   ]
