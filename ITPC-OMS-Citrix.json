@@ -5,24 +5,26 @@
     "location": {
       "type": "string",
       "allowedValues": [
-        "eastus",
-        "westeurope",
-        "southeastasia",
-        "australiasoutheast",
-        "westcentralus",
-        "japaneast"
+        "Australia Southeast",
+        "East US",
+        "Japan East",
+        "Southeast Asia",
+        "UK South",
+        "West Central US",
+        "West Europe"
       ],
       "defaultValue": "westeurope"
     },
     "workspace": {
       "type": "string",
-      "defaultValue": "enterAuniqueDnsHostName1f"
+      "defaultValue": "enterAuniqueDnsHostName1g"
     }
   },
   "variables": {
     "workspaceapiversion": "2017-04-26-preview",
     "OMSViews": {
       "viewNames": [
+        "Workspace.omsview",
         "Citrix%20Processes.omsview",
         "Citrix%20Sessions.omsview",
         "Citrix%20Site%20and%20Applications.omsview",
@@ -32,16 +34,6 @@
   },
 
   "resources": [
-      {
-        "apiVersion": "[variables('workspaceapiversion')]",
-        "name": "[parameters('workspace')]",
-        "type": "Microsoft.OperationalInsights/workspaces",
-        "location": "[parameters('location')]",
-        "properties": {
-          "sku": { "Name": "Standalone" },
-          "retentionInDays": 360
-        }
-      },
       {
         "apiVersion": "2017-05-10",
         "name": "[replace(variables('OMSViews').viewNames[copyIndex()], '%20', '_')]",
@@ -66,5 +58,5 @@
           }
         }
       }
-      ]
-    }
+  ]
+}
