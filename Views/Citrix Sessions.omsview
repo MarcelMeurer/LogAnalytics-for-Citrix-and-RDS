@@ -43,7 +43,7 @@
                     "properties": {
                         "Id": "Citrix Sessions",
                         "Name": "Citrix Sessions",
-                        "Author": "Marcel.Meurer@sepago.de",
+                        "Author": "marcel.meurer@sepago.de",
                         "Source": "Local",
                         "Version": 2,
                         "Dashboard": [
@@ -63,7 +63,7 @@
                                         "Subtitle": "Unique Sessions State"
                                     },
                                     "Donut": {
-                                        "Query": "ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
+                                        "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -80,7 +80,7 @@
                                         "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Terminal Services\" and Counter_s == \"Active Sessions\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"Terminal Services\" and Counter_s == \"Active Sessions\" | summarize AggregatedValue = avg(value_d) by Worker_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "ColumnsTitle": {
@@ -135,7 +135,7 @@
                                         "Subtitle": "in seconds"
                                     },
                                     "LineChart": {
-                                        "Query": "ITPC_CTX_Session_CL | where ConnectionState_s == \"Active\" | summarize Duration = avg(LogonDuration_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | where Duration > 0 | render timechart// Oql: Type=ITPC_CTX_Session_CL ConnectionState_s=\"Active\"|measure avg(LogonDuration_d) as Duration by Worker_s | where Duration>0|display LineChart",
+                                        "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} and ConnectionState_s == \"Active\" | summarize Duration = avg(LogonDuration_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | where Duration > 0 | render timechart// Oql: Type=ITPC_CTX_Session_CL ConnectionState_s=\"Active\"|measure avg(LogonDuration_d) as Duration by Worker_s | where Duration>0|display LineChart",
                                         "Callout": {
                                             "Title": "Avg per hour",
                                             "Series": "",
@@ -153,10 +153,9 @@
                                         "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "ITPC_CTX_Session_CL | where ConnectionState_s == \"Active\" | summarize Duration = avg(LogonDuration_d) by UserName_s | where Duration > 0|order by Duration desc ",
+                                        "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} and ConnectionState_s == \"Active\" | summarize Duration = avg(LogonDuration_d) by UserName_s | where Duration > 0|order by Duration desc ",
                                         "HideGraph": false,
                                         "enableSparklines": false,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "User",
                                             "Value": "seconds"
@@ -194,6 +193,149 @@
                                 }
                             },
                             {
+                                "Id": "LineChartCalloutStackedBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Citrix Sessions",
+                                        "newGroup": false
+                                    },
+                                    "charts": [
+                                        {
+                                            "Header": {
+                                                "Title": "All Sessions",
+                                                "Subtitle": ""
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} | summarize DistinctSessions=dcount(SessionHash_s) by TimeGenerated",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        },
+                                        {
+                                            "Header": {
+                                                "Title": "Active Sessions",
+                                                "Subtitle": ""
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} | summarize DistinctActive=dcountif(SessionHash_s, ConnectionState_s==\"Active\") by TimeGenerated",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        },
+                                        {
+                                            "Header": {
+                                                "Title": "Disconnected Sessions",
+                                                "Subtitle": ""
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} | summarize DistinctDisconnected=dcountif(SessionHash_s, ConnectionState_s==\"Disconnected\") by TimeGenerated",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Citrix Sessions",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Unique Users",
+                                        "Subtitle": ""
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} | summarize DistinctUsers=dcount(UserName_s) by TimeGenerated",
+                                        "Callout": {
+                                            "Title": "Max",
+                                            "Series": "",
+                                            "Operation": "Max"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_Session_CL | where ${Desktop Group} | summarize Hours=count(UserName_s)/60 by UserName_s | sort by Hours ",
+                                        "HideGraph": false,
+                                        "enableSparklines": false,
+                                        "ColumnsTitle": {
+                                            "Name": "Name",
+                                            "Value": "Hours Connected"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
+                                    }
+                                }
+                            },
+                            {
                                 "Id": "LineChartCalloutBuilderBlade",
                                 "Type": "Blade",
                                 "Version": 0,
@@ -209,7 +351,7 @@
                                         "Subtitle": "bit/s"
                                     },
                                     "LineChart": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                         "Callout": {
                                             "Title": "Avg ",
                                             "Series": "",
@@ -227,10 +369,9 @@
                                         "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s|order by  AggregatedValue desc ",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s|order by  AggregatedValue desc ",
                                         "HideGraph": false,
                                         "enableSparklines": true,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "User",
                                             "Value": "bit/s"
@@ -283,7 +424,7 @@
                                         "Subtitle": "bit/s"
                                     },
                                     "LineChart": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                         "Callout": {
                                             "Title": "Avg",
                                             "Series": "",
@@ -301,10 +442,9 @@
                                         "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "User",
                                             "Value": "bit/s"
@@ -357,7 +497,7 @@
                                         "Subtitle": "ms"
                                     },
                                     "LineChart": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                         "Callout": {
                                             "Title": "Avg",
                                             "Series": "",
@@ -375,10 +515,9 @@
                                         "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s|order by AggregatedValue desc ",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s|order by AggregatedValue desc ",
                                         "HideGraph": false,
                                         "enableSparklines": true,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "User",
                                             "Value": "ms"
@@ -431,7 +570,7 @@
                                         "Subtitle": "bit/s"
                                     },
                                     "LineChart": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                         "Callout": {
                                             "Title": "Avg",
                                             "Series": "",
@@ -449,10 +588,9 @@
                                         "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s | order by AggregatedValue desc ",
+                                        "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Output Session Line Speed\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s | order by AggregatedValue desc ",
                                         "HideGraph": false,
                                         "enableSparklines": true,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "User",
                                             "Value": "Count"
@@ -505,7 +643,7 @@
                                                 "Subtitle": "bit/s"
                                             },
                                             "LineChart": {
-                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Output Session Bandwidth\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                                 "yAxis": {
                                                     "isLogarithmic": false,
                                                     "units": {
@@ -524,7 +662,7 @@
                                                 "Subtitle": "bit/s"
                                             },
                                             "LineChart": {
-                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Input Session Bandwidth\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                                 "yAxis": {
                                                     "isLogarithmic": false,
                                                     "units": {
@@ -543,7 +681,7 @@
                                                 "Subtitle": "ms"
                                             },
                                             "LineChart": {
-                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "Query": "ITPC_CTX_PerfData_CL | where ${Desktop Group} and Category == \"ICA Session\" and Counter_s == \"Latency - Last Recorded\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
                                                 "yAxis": {
                                                     "isLogarithmic": false,
                                                     "units": {
@@ -591,7 +729,13 @@
                                 }
                             }
                         ],
-                        "Filters": [],
+                        "Filters": [
+                            {
+                                "FieldName": "DesktopGroup_s",
+                                "QueryForValues": "ITPC_CTX_Session_CL | distinct DesktopGroup_s",
+                                "Title": "Desktop Group"
+                            }
+                        ],
                         "OverviewTile": {
                             "Id": "SingleQueryDonutBuilderTileV1",
                             "Type": "OverviewTile",
