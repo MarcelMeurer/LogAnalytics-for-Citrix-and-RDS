@@ -35,7 +35,7 @@
    "resources":[
       {
           "apiVersion": "2018-02-01",
-          "name": "pid-829f34d0-ff76-42d3-b46f-f527d50ff819", // use your generated GUID here
+          "name": "pid-829f34d0-ff76-42d3-b46f-f527d50ff819",
           "type": "Microsoft.Resources/deployments",
           "properties": {
             "mode": "Incremental",
