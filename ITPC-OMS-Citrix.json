@@ -33,6 +33,19 @@
       }
    },
    "resources":[
+       {
+          "apiVersion": "2018-02-01",
+          "name": "pid-ffc08e4e-3df5-4fdd-947f-34a8ca28fe32", // use your generated GUID here
+          "type": "Microsoft.Resources/deployments",
+          "properties": {
+            "mode": "Incremental",
+            "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "resources": []
+            }
+          }
+      },
       {
          "apiVersion":"2017-05-10",
          "name":"[replace(variables('OMSViews').viewNames[copyIndex()], '%20', '_')]",
