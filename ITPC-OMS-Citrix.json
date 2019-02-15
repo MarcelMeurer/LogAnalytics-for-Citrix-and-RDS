@@ -78,7 +78,7 @@
               "value": "[subscription().subscriptionId]"
             },
             "workspaceapiversion": {
-              "value": "[variables('workspaceapiversion')]"
+              "value": "[parameters('workspaceapiversion')]"
             }
           }
          }
