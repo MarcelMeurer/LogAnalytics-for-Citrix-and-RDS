@@ -18,10 +18,13 @@
       "workspace":{
          "type":"string",
          "defaultValue":"enterAuniqueDnsHostName"
-      }
+      },
+	  "workspaceapiversion":{
+         "type":"string",
+         "defaultValue":"2017-04-26-preview"
+      }     
    },
    "variables":{
-      "workspaceapiversion":"2017-04-26-preview",
       "OMSViews":{
          "viewNames":[
             "Workspace.omsview",
