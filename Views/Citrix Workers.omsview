@@ -546,13 +546,13 @@
                             "Configuration": {
                                 "Tile": {
                                     "Legend": "Are reporting to Log Analytics",
-                                    "Query": "ITPC_CTX_PerfData_CL | where TimeGenerated > ago(30m) | distinct Worker_s| count // Oql: Type=ITPC_CTX_PerfData_CL TimeGenerated>NOW-30MINUTES | distinct Worker_s"
+                                    "Query": "ITPC_CTX_PerfData_CL | where TimeGenerated > ago(30m) | distinct Worker_s| count"
                                 },
                                 "Advanced": {
                                     "DataFlowVerification": {
                                         "Enabled": true,
-                                        "Query": "ITPC_CTX_PerfData_CL | summarize count()",
-                                        "Message": "There are no data know. Make sure that you have installed the agents (http://loganalytics.sepago.com).\n\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme. "
+                                        "Query": "ITPC_CTX_PerfData_CL | count",
+                                        "Message": "There are no data at this time. Make sure that you have installed the agents (http://loganalytics.sepago.com).\\n\\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme."
                                     }
                                 }
                             }
