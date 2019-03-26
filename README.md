@@ -21,4 +21,6 @@ After the depoyment:
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-You can easily deploy the solution from the Azure Marketplace: (https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=sepago&page=1)
+
+###You can easily deploy the solution from the Azure Marketplace:
+https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=sepago&page=1
