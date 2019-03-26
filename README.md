@@ -20,3 +20,4 @@ After the depoyment:
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-Citrix.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
+You can easyl deploy the solution from the Azure Marketplace: <a href="https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=sepago&page=1" target="_blank">
