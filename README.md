@@ -22,5 +22,5 @@ After the depoyment:
 </a>
 
 
-###You can easily deploy the solution from the Azure Marketplace:
+##You can easily deploy the solution from the Azure Marketplace:
 https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=sepago&page=1
