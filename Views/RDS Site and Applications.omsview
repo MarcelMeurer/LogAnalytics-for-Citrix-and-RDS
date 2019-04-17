@@ -43,8 +43,9 @@
                     "properties": {
                         "Id": "RDS Site and Applications",
                         "Name": "RDS Site and Applications",
-                        "Author": "marcel.meurer@sepago.de",
+                        "Author": null,
                         "Source": "Local",
+                        "Version": 2,
                         "Dashboard": [
                             {
                                 "Id": "NumberTileListBuilderBlade",
@@ -58,14 +59,14 @@
                                         "useIcon": false
                                     },
                                     "Tile": {
-                                        "Query": "Type=ITPC_CTX_Session_CL | distinct UserName_s",
-                                        "Legend": "Unique User"
+                                        "Legend": "Unique User",
+                                        "Query": "ITPC_CTX_Session_CL | distinct UserName_s| count // Oql: Type=ITPC_CTX_Session_CL | distinct UserName_s",
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL  | measure countdistinct(UserName_s) as Count by DesktopGroup_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | summarize Count = dcount(UserName_s) by DesktopGroup_s// Oql: Type=ITPC_CTX_PerfData_CL  | measure countdistinct(UserName_s) as Count by DesktopGroup_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "DesktopGroup",
                                             "Value": "Count"
@@ -95,7 +96,10 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item}"
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
                                     }
                                 }
                             },
@@ -111,11 +115,12 @@
                                         "useIcon": false
                                     },
                                     "Tile": {
-                                        "Query": "Type=ITPC_CTX_Application_CL Event_s:\"crashed\"|measure count () by Name_s",
-                                        "Legend": "Application Crashed"
+                                        "Query": "ITPC_CTX_Application_CL | where Event_s == \"crashed\" | summarize AggregatedValue = count() by Name_s\r\n| count // Oql: Type=ITPC_CTX_Application_CL Event_s:\"crashed\"|measure count () by Name_s",
+                                        "Legend": "Application Crashed",
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Application_CL Event_s:\"crashed\"|measure count () by Name_s",
+                                        "Query": "ITPC_CTX_Application_CL | where Event_s == \"crashed\" | summarize AggregatedValue = count() by Name_s\r\n// Oql: Type=ITPC_CTX_Application_CL Event_s:\"crashed\"|measure count () by Name_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -148,7 +153,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": ""
+                                        "NavigationQuery": "",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -168,7 +174,7 @@
                                         "Subtitle": "%"
                                     },
                                     "LineChart": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"Processor Information\" Counter_s:\"% Processor Time\"|measure avg(value_d) by Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Processor Information\" and Counter_s == \"% Processor Time\" | summarize AggregatedValue = avg(value_d) by Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"Processor Information\" Counter_s:\"% Processor Time\"|measure avg(value_d) by Worker_s",
                                         "yAxis": {
                                             "isLogarithmic": false,
                                             "units": {
@@ -177,10 +183,11 @@
                                                 "displayUnit": ""
                                             },
                                             "customLabel": ""
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Process_CL  |measure avg(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s",
+                                        "Query": "ITPC_CTX_Process_CL | summarize AggregatedValue = avg(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL  |measure avg(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -213,7 +220,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Process_CL  |measure max(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s | display linechart"
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} | summarize AggregatedValue = max(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL  |measure max(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s | display linechart",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -233,7 +241,7 @@
                                         "Subtitle": "Byte"
                                     },
                                     "LineChart": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"Memory\" Counter_s:\"Available Bytes\"|measure avg(value_d) by Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Memory\" and Counter_s == \"Available Bytes\" | summarize AggregatedValue = avg(value_d) by Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"Memory\" Counter_s:\"Available Bytes\"|measure avg(value_d) by Worker_s",
                                         "yAxis": {
                                             "isLogarithmic": false,
                                             "units": {
@@ -242,10 +250,11 @@
                                                 "displayUnit": ""
                                             },
                                             "customLabel": ""
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Process_CL  |measure avg(WorkingSet_d) by UserName_s, Worker_s, Name_s",
+                                        "Query": "ITPC_CTX_Process_CL | summarize AggregatedValue = avg(WorkingSet_d) by UserName_s, Worker_s, Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL  |measure avg(WorkingSet_d) by UserName_s, Worker_s, Name_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -278,7 +287,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Process_CL  |measure max(WorkingSet_d) by UserName_s, Worker_s, Name_s | display linechart"
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} | summarize AggregatedValue = max(WorkingSet_d) by UserName_s, Worker_s, Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL  |measure max(WorkingSet_d) by UserName_s, Worker_s, Name_s | display linechart",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -298,7 +308,7 @@
                                         "Subtitle": "Shared Ticks"
                                     },
                                     "Donut": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by Name_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by Name_s",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -311,10 +321,11 @@
                                                 "#00bcf2"
                                             ],
                                             "valueColorMapping": []
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by Name_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by Name_s",
                                         "HideGraph": false,
                                         "enableSparklines": false,
                                         "operation": "Summary",
@@ -347,7 +358,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by UserName_s"
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by UserName_s",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -367,7 +379,7 @@
                                         "Subtitle": "Memory Ticks"
                                     },
                                     "Donut": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by Name_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by Name_s",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -380,10 +392,11 @@
                                                 "#00bcf2"
                                             ],
                                             "valueColorMapping": []
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by Name_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by Name_s",
                                         "HideGraph": false,
                                         "enableSparklines": false,
                                         "operation": "Summary",
@@ -416,7 +429,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by UserName_s"
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by UserName_s",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -436,7 +450,7 @@
                                         "Subtitle": "Shared Ticks"
                                     },
                                     "Donut": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by UserName_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by UserName_s",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -449,10 +463,11 @@
                                                 "#00bcf2"
                                             ],
                                             "valueColorMapping": []
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by UserName_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by UserName_s",
                                         "HideGraph": false,
                                         "enableSparklines": false,
                                         "operation": "Summary",
@@ -485,7 +500,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by Name_s"
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | measure sum(PercentProcessorTime_d) by Name_s",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -505,7 +521,7 @@
                                         "Subtitle": "Memory Ticks"
                                     },
                                     "Donut": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by UserName_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by UserName_s",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -518,10 +534,11 @@
                                                 "#00bcf2"
                                             ],
                                             "valueColorMapping": []
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by UserName_s",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s\r\n// Oql: Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by UserName_s",
                                         "HideGraph": false,
                                         "enableSparklines": false,
                                         "operation": "Summary",
@@ -554,24 +571,26 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by Name_s"
+                                        "NavigationQuery": "search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s\r\n// Oql: {selected item} Type=ITPC_CTX_Process_CL not Name_s:\"System Idle Process\" | Extend product(WorkingSet_d,0.0000000001) as WorkingSetN | measure sum(WorkingSetN) by Name_s",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             }
                         ],
+                        "Filters": [],
                         "OverviewTile": {
                             "Id": "SingleNumberBuilderTile",
                             "Type": "OverviewTile",
-                            "Version": 0,
+                            "Version": 2,
                             "Configuration": {
                                 "Tile": {
                                     "Legend": "Unique Users",
-                                    "Query": "Type=ITPC_CTX_Process_CL | distinct UserName_s"
+                                    "Query": "ITPC_CTX_Process_CL | distinct UserName_s\r\n| count // Oql: Type=ITPC_CTX_Process_CL | distinct UserName_s"
                                 },
                                 "Advanced": {
                                     "DataFlowVerification": {
                                         "Enabled": false,
-                                        "Query": "*",
+                                        "Query": "search *\r\n// Oql: *",
                                         "Message": ""
                                     }
                                 }

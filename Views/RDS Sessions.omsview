@@ -43,8 +43,9 @@
                     "properties": {
                         "Id": "RDS Sessions",
                         "Name": "RDS Sessions",
-                        "Author": "marcel.meurer@sepago.de",
+                        "Author": null,
                         "Source": "Local",
+                        "Version": 2,
                         "Dashboard": [
                             {
                                 "Id": "SingleQueryDonutBuilderBladeV1",
@@ -62,7 +63,7 @@
                                         "Subtitle": "Unique Sessions State"
                                     },
                                     "Donut": {
-                                        "Query": "Type=ITPC_CTX_Session_CL  | measure countdistinct(SessionHash_s) by ConnectionState_s",
+                                        "Query": "ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc// Oql: Type=ITPC_CTX_Session_CL  | measure countdistinct(SessionHash_s) by ConnectionState_s",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -75,13 +76,13 @@
                                                 "#00bcf2"
                                             ],
                                             "valueColorMapping": []
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"Terminal Services\" Counter_s:\"Active Sessions\" | measure avg(value_d) by Worker_s ",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Terminal Services\" and Counter_s == \"Active Sessions\" | summarize AggregatedValue = avg(value_d) by Worker_s// Oql: Type=ITPC_CTX_PerfData_CL Category:\"Terminal Services\" Counter_s:\"Active Sessions\" | measure avg(value_d) by Worker_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
-                                        "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "Worker",
                                             "Value": "Active Sessions"
@@ -111,7 +112,10 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_Session_CL  | measure countdistinct(SessionHash_s) by ConnectionState_s"
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
                                     }
                                 }
                             },
@@ -131,7 +135,7 @@
                                         "Subtitle": "bit/s"
                                     },
                                     "LineChart": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
                                         "Callout": {
                                             "Title": "Avg ",
                                             "Series": "",
@@ -145,10 +149,11 @@
                                                 "displayUnit": ""
                                             },
                                             "customLabel": ""
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" | measure avg(value_d) by UserName_s, Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" | measure avg(value_d) by UserName_s, Worker_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -181,7 +186,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item}  Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" | measure avg(value_d) INTERVAl 5MINUTES"
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc\r\n// Oql: {selected item}  Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" | measure avg(value_d) INTERVAl 5MINUTES",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -201,7 +207,7 @@
                                         "Subtitle": "bit/s"
                                     },
                                     "LineChart": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
                                         "Callout": {
                                             "Title": "Avg",
                                             "Series": "",
@@ -215,10 +221,11 @@
                                                 "displayUnit": ""
                                             },
                                             "customLabel": ""
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" | measure avg(value_d) by UserName_s, Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" | measure avg(value_d) by UserName_s, Worker_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -251,7 +258,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" | measure avg(value_d) interval 5MINUTES"
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc\r\n// Oql: {selected item} Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" | measure avg(value_d) interval 5MINUTES",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -271,7 +279,7 @@
                                         "Subtitle": "ms"
                                     },
                                     "LineChart": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\"  not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\"  not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
                                         "Callout": {
                                             "Title": "Avg",
                                             "Series": "",
@@ -285,10 +293,11 @@
                                                 "displayUnit": ""
                                             },
                                             "customLabel": ""
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" | measure avg(value_d) by UserName_s, Worker_s",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" | measure avg(value_d) by UserName_s, Worker_s",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -321,7 +330,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" | measure avg(value_d) interval 5MINUTES"
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc\r\n// Oql: {selected item} Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" | measure avg(value_d) interval 5MINUTES",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -341,7 +351,7 @@
                                         "Subtitle": "bit/s"
                                     },
                                     "LineChart": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP Bandwidth\" not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP Bandwidth\" not Instance_s:\"_Server Total\" | measure avg(value_d) by Worker_s | display LineChart",
                                         "Callout": {
                                             "Title": "Avg",
                                             "Series": "",
@@ -355,10 +365,11 @@
                                                 "displayUnit": ""
                                             },
                                             "customLabel": ""
-                                        }
+                                        },
+                                        "NavigationSelect": {}
                                     },
                                     "List": {
-                                        "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP Bandwidth\" | measure avg(value_d) by UserName_s, Worker_s | sort AggregatedValue desc",
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP Bandwidth\" | measure avg(value_d) by UserName_s, Worker_s | sort AggregatedValue desc",
                                         "HideGraph": false,
                                         "enableSparklines": true,
                                         "operation": "Summary",
@@ -391,7 +402,8 @@
                                             ]
                                         },
                                         "NameDSVSeparator": "",
-                                        "NavigationQuery": "{selected item} Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP Bandwidth\" | measure avg(value_d) interval 5MINUTES"
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc\r\n// Oql: {selected item} Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP Bandwidth\" | measure avg(value_d) interval 5MINUTES",
+                                        "NavigationSelect": {}
                                     }
                                 }
                             },
@@ -411,7 +423,7 @@
                                                 "Subtitle": "bit/s"
                                             },
                                             "LineChart": {
-                                                "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" | measure max(value_d) by Worker_s  |display LineChart",
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" | measure max(value_d) by Worker_s  |display LineChart",
                                                 "yAxis": {
                                                     "isLogarithmic": false,
                                                     "units": {
@@ -420,7 +432,8 @@
                                                         "displayUnit": ""
                                                     },
                                                     "customLabel": ""
-                                                }
+                                                },
+                                                "NavigationSelect": {}
                                             }
                                         },
                                         {
@@ -429,7 +442,7 @@
                                                 "Subtitle": "bit/s"
                                             },
                                             "LineChart": {
-                                                "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" | measure max(value_d) by Worker_s |display LineChart",
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Received Rate\" | measure max(value_d) by Worker_s |display LineChart",
                                                 "yAxis": {
                                                     "isLogarithmic": false,
                                                     "units": {
@@ -438,7 +451,8 @@
                                                         "displayUnit": ""
                                                     },
                                                     "customLabel": ""
-                                                }
+                                                },
+                                                "NavigationSelect": {}
                                             }
                                         },
                                         {
@@ -447,7 +461,7 @@
                                                 "Subtitle": "ms"
                                             },
                                             "LineChart": {
-                                                "Query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" | measure max(value_d) by Worker_s |display LineChart",
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" | measure max(value_d) by Worker_s |display LineChart",
                                                 "yAxis": {
                                                     "isLogarithmic": false,
                                                     "units": {
@@ -456,7 +470,8 @@
                                                         "displayUnit": ""
                                                     },
                                                     "customLabel": ""
-                                                }
+                                                },
+                                                "NavigationSelect": {}
                                             }
                                         }
                                     ]
@@ -475,32 +490,33 @@
                                     },
                                     "queries": [
                                         {
-                                            "query": "Type=ITPC_CTX_Session_CL TimeGenerated>NOW-60MINUTES | sort TimeGenerated desc, UserName_s",
+                                            "query": "ITPC_CTX_Session_CL | where TimeGenerated > ago(60m) | sort by TimeGenerated desc, UserName_s asc\r\n// Oql: Type=ITPC_CTX_Session_CL TimeGenerated>NOW-60MINUTES | sort TimeGenerated desc, UserName_s",
                                             "displayName": "Connection List (Last 60 Minutes)"
                                         },
                                         {
-                                            "query": "Type=ITPC_CTX_Session_CL  | Distinct ClientName_s",
+                                            "query": "ITPC_CTX_Session_CL | distinct ClientName_s\r\n// Oql: Type=ITPC_CTX_Session_CL  | Distinct ClientName_s",
                                             "displayName": "Client Station Names"
                                         },
                                         {
-                                            "query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" UserName_s:\"mmeurer\" | measure avg(value_d) by Worker_s  interval 30Minutes",
+                                            "query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Total Sent Rate\" UserName_s:\"mmeurer\" | measure avg(value_d) by Worker_s  interval 30Minutes",
                                             "displayName": "Session Output Bandwidth for a specific User"
                                         },
                                         {
-                                            "query": "Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" UserName_s:\"mmeurer\" | measure avg(value_d) by Worker_s  interval 30Minutes",
+                                            "query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc\r\n// Oql: Type=ITPC_CTX_PerfData_CL Category:\"RemoteFX Network\" Counter_s:\"Current TCP RTT\" UserName_s:\"mmeurer\" | measure avg(value_d) by Worker_s  interval 30Minutes",
                                             "displayName": "Session RTT for a specific User"
                                         }
                                     ]
                                 }
                             }
                         ],
+                        "Filters": [],
                         "OverviewTile": {
                             "Id": "SingleQueryDonutBuilderTileV1",
                             "Type": "OverviewTile",
-                            "Version": 0,
+                            "Version": 2,
                             "Configuration": {
                                 "Donut": {
-                                    "Query": "Type=ITPC_CTX_Session_CL  TimeGenerated>NOW-60MINUTES | measure countdistinct(SessionHash_s) by ConnectionState_s",
+                                    "Query": "ITPC_CTX_Session_CL | where TimeGenerated > ago(60m) | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc\r\n// Oql: Type=ITPC_CTX_Session_CL  TimeGenerated>NOW-60MINUTES | measure countdistinct(SessionHash_s) by ConnectionState_s",
                                     "CenterLegend": {
                                         "Text": "Active",
                                         "Operation": "Sum",
@@ -520,7 +536,7 @@
                                 "Advanced": {
                                     "DataFlowVerification": {
                                         "Enabled": false,
-                                        "Query": "*",
+                                        "Query": "search *\r\n// Oql: *",
                                         "Message": ""
                                     }
                                 }
