@@ -28,10 +28,10 @@
       "OMSViews":{
          "viewNames":[
             "Workspace.omsview",
-            "RDS%20Processes.omsview",
-            "RDS%20Sessions.omsview",
-            "RDS%20Site%20and%20Applications.omsview",
-            "RDS%20Workers.omsview"
+            "RDS-Processes.omsview",
+            "RDS-Sessions.omsview",
+            "RDS-Site-and-Applications.omsview",
+            "RDS-Workers.omsview"
          ]
       }
    },
