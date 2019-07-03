@@ -331,7 +331,7 @@
                                         "enableSparklines": false,
                                         "operation": "Summary",
                                         "ColumnsTitle": {
-                                            "Name": "User",
+                                            "Name": "Process",
                                             "Value": "S-Ticks"
                                         },
                                         "Color": "#0072c6",
@@ -473,7 +473,7 @@
                                         "enableSparklines": false,
                                         "operation": "Summary",
                                         "ColumnsTitle": {
-                                            "Name": "Process",
+                                            "Name": "User",
                                             "Value": "S-Ticks"
                                         },
                                         "Color": "#0072c6",
