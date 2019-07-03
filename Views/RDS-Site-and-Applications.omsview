@@ -402,7 +402,7 @@
                                         "enableSparklines": false,
                                         "operation": "Summary",
                                         "ColumnsTitle": {
-                                            "Name": "User",
+                                            "Name": "Process",
                                             "Value": "M-nTicks"
                                         },
                                         "Color": "#0072c6",
@@ -544,8 +544,8 @@
                                         "enableSparklines": false,
                                         "operation": "Summary",
                                         "ColumnsTitle": {
-                                            "Name": "Process",
-                                            "Value": "M-nTicks"
+                                            "Name": "User",
+                                            "Value": "M-Ticks"
                                         },
                                         "Color": "#0072c6",
                                         "thresholds": {
