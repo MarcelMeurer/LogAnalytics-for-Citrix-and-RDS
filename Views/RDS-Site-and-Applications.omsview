@@ -309,7 +309,7 @@
                                         "Subtitle": "Shared Ticks"
                                     },
                                     "Donut": {
-                                        "Query": "ITPC_CTX_Process_CL | where UserName_s !=\"\"  and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s | sort by AggregatedValue desc",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s | sort by AggregatedValue desc",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",
@@ -380,7 +380,7 @@
                                         "Subtitle": "Memory Ticks"
                                     },
                                     "Donut": {
-                                        "Query": "ITPC_CTX_Process_CL | where UserName_s !=\"\"  and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s | sort by AggregatedValue desc",
+                                        "Query": "ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s | sort by AggregatedValue desc",
                                         "CenterLegend": {
                                             "Text": "Total",
                                             "Operation": "Sum",

@@ -28,10 +28,10 @@
       "OMSViews":{
          "viewNames":[
             "Workspace.omsview",
-            "Citrix%20Processes.omsview",
-            "Citrix%20Sessions.omsview",
-            "Citrix%20Site%20and%20Applications.omsview",
-            "Citrix%20Workers.omsview"
+            "Citrix-Processes.omsview",
+            "Citrix-Sessions.omsview",
+            "Citrix-Site-and-Applications.omsview",
+            "Citrix-Workers.omsview"
          ]
       }
    },

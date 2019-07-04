@@ -349,7 +349,7 @@
                                         "useIcon": false
                                     },
                                     "Header": {
-                                        "Title": "Data types over time",
+                                        "Title": "Overall by Process Name",
                                         "Subtitle": ""
                                     },
                                     "LineChart": {
