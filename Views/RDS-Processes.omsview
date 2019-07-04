@@ -161,7 +161,7 @@
                                         "operation": "Summary",
                                         "ColumnsTitle": {
                                             "Name": "Name",
-                                            "Value": "Count"
+                                            "Value": "%"
                                         },
                                         "Color": "#0072c6",
                                         "thresholds": {
