@@ -17,15 +17,11 @@
         "workspace": {
             "type": "string",
             "defaultValue": ""
-        },
-        "workspaceapiversion": {
-            "type": "string",
-            "defaultValue": ""
         }
     },
     "resources": [
         {
-            "apiVersion": "[parameters('workspaceapiversion')]",
+            "apiVersion": "2017-04-26-preview",
             "name": "[parameters('workspace')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",

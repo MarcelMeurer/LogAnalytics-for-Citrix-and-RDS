@@ -18,10 +18,6 @@
       "workspace":{
          "type":"string",
          "defaultValue":"enterAuniqueDnsHostName"
-      },
-      "workspaceapiversion":{
-         "type":"string",
-         "defaultValue":"2017-04-26-preview"
       }
    },
    "variables":{
@@ -76,9 +72,6 @@
             },
             "subscriptionId": {
               "value": "[subscription().subscriptionId]"
-            },
-            "workspaceapiversion": {
-              "value": "[parameters('workspaceapiversion')]"
             }
           }
          }
