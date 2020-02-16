@@ -4,14 +4,24 @@ This solution monitors each worker in your RDS, WVD or Citrix environment. The a
 
 The agents combine data from different sources and send them to your OMS Log Analytics workspace in Azure. There is no other infrastructure needed: No SQL server, no windows server. Nothing else! The data are saved and analyzed in Azure.
 
-Go to http://loganalytics.sepago.com to download the agent and learn more.
 
-After the depoyment:
+
+Go to [http://loganalytics.sepago.com](http://loganalytics.sepago.com) to download the agent and learn more.
+
+
+
+After the deployment:
+
 - Install and configure the agents
 - Set the retention time of your workspace (default: 360 days)
-- Set the DPOR number (http://loganalytics.sepago.com/installation.html)
+- Test the agent and Azure Monitor
+- Analyze your data
+- Decide if you will continue the Azure Monitor Agent in the community edition or if you want to run fully supported, including premium features, updates, and support for building KUSTO queries. Visit [sepago Shop](https://shop.sepago.de/product/?id=1E79F2B5-7514-4AEB-B092-63365BBAAE1E) for more information.
+
+
 
 ## Deploy a full Azure Monitor workspace for RDS and Windows Virtual Desktop to your Azure subscription
+
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-RDS.json" target="_blank">
 ​    <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
