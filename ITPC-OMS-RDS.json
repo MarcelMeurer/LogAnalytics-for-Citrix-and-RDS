@@ -6,12 +6,40 @@
          "type":"string",
          "allowedValues":[
             "Australia Southeast",
-            "East US",
+			"Australia East",
+			"Australia Southeast",
+			
+			"Central US",
+			"East US",
+            "East US 2",
+			"North Central US",
+			"South Central US",
+			"West Central US",
+			"West US",
+			"West US 2",
+			"South Africa North",
+			"East Asia",
+			"Southeast Asia",
+			"UK South",
+			"UK West",
+			
+			
             "Japan East",
             "Southeast Asia",
-            "UK South",
-            "West Central US",
-            "West Europe"
+
+            "West Europe",
+			"North Europe",
+			"France Central",
+			"Central India",
+	
+			"Korea Central",
+			"Switzerland North",
+			
+			
+			
+			"Canada Central",
+			"China East 2"
+			
          ],
          "defaultValue":"West Europe"
       },
