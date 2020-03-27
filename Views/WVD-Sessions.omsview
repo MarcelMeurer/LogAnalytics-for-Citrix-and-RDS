@@ -1,0 +1,547 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "resourcegroup": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "workspace": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-04-26-preview",
+            "name": "[parameters('workspace')]",
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "location": "[parameters('location')]",
+            "id": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace'))]",
+            "resources": [
+                {
+                    "apiVersion": "2015-11-01-preview",
+                    "name": "WVD Sessions",
+                    "type": "views",
+                    "location": "[parameters('location')]",
+                    "id": "[resourceId('Microsoft.OperationalInsights/workspaces/views', parameters('workspace'),'WVD Sessions')]",
+                    "dependson": [
+                        "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace'))]"
+                    ],
+                    "properties": {
+                        "Id": "WVD Sessions",
+                        "Name": "WVD Sessions",
+                        "Author": "marcel.meurer@sepago.de",
+                        "Source": "Local",
+						"Version": 2,
+                        "Dashboard": [
+                            {
+                                "Id": "SingleQueryDonutBuilderBladeV1",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "WVD Sessions",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "WVD Sessions",
+                                        "Subtitle": "Unique Sessions State"
+                                    },
+                                    "Donut": {
+                                        "Query": "ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
+                                        "CenterLegend": {
+                                            "Text": "Total",
+                                            "Operation": "Sum",
+                                            "ArcsToSelect": []
+                                        },
+                                        "Options": {
+                                            "colors": [
+                                                "#00188f",
+                                                "#0072c6",
+                                                "#00bcf2"
+                                            ],
+                                            "valueColorMapping": []
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"Terminal Services\" and Counter_s == \"Active Sessions\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+															   
+                                        "ColumnsTitle": {
+                                            "Name": "Worker",
+                                            "Value": "Active Sessions"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "20",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "40",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search {selected item} | sort by TimeGenerated desc",
+                                        "NavigationSelect": {
+                                            "NavigationQuery": "search {selected item} | sort by TimeGenerated desc"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Output Bandwidth",
+                                        "newGroup": true,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Bandwidth per Worker",
+                                        "Subtitle": "bit/s"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg ",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "bit/s"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "200000",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "1000000",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Input Bandwidth",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Bandwidth per Worker",
+                                        "Subtitle": "bit/s"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "bit/s"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": false,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "60",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "90",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session TCP RTT",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average RTT per Worker",
+                                        "Subtitle": "ms"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "ms"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Normal",
+                                                    "threshold": "Default",
+                                                    "color": "#009e49",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "350",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "600",
+                                                    "color": "#ba141a",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Output TCP Line Speed",
+                                        "newGroup": false,
+                                        "icon": "",
+                                        "useIcon": false
+                                    },
+                                    "Header": {
+                                        "Title": "Average Output Line Speed per Worker",
+                                        "Subtitle": "bit/s"
+                                    },
+                                    "LineChart": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                        "Callout": {
+                                            "Title": "Avg",
+                                            "Series": "",
+                                            "Operation": "Average"
+                                        },
+                                        "yAxis": {
+                                            "isLogarithmic": false,
+                                            "units": {
+                                                "baseUnitType": "",
+                                                "baseUnit": "",
+                                                "displayUnit": ""
+                                            },
+                                            "customLabel": ""
+                                        },
+                                        "NavigationSelect": {}
+                                    },
+                                    "List": {
+                                        "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s | sort by AggregatedValue desc",
+                                        "HideGraph": false,
+                                        "enableSparklines": true,
+                                        "operation": "Summary",
+                                        "ColumnsTitle": {
+                                            "Name": "User",
+                                            "Value": "Count"
+                                        },
+                                        "Color": "#0072c6",
+                                        "thresholds": {
+                                            "isEnabled": true,
+                                            "values": [
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "Default",
+                                                    "color": "#ba141a",
+                                                    "isDefault": true
+                                                },
+                                                {
+                                                    "name": "Warning",
+                                                    "threshold": "1000000",
+                                                    "color": "#fcd116",
+                                                    "isDefault": false
+                                                },
+                                                {
+                                                    "name": "Error",
+                                                    "threshold": "2000000",
+                                                    "color": "#009e49",
+                                                    "isDefault": false
+                                                }
+                                            ]
+                                        },
+                                        "NameDSVSeparator": "",
+                                        "NavigationQuery": "search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc",
+                                        "NavigationSelect": {}
+                                    }
+                                }
+                            },
+                            {
+                                "Id": "LineChartCalloutStackedBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Maximum Values",
+                                        "newGroup": true
+                                    },
+                                    "charts": [
+                                        {
+                                            "Header": {
+                                                "Title": "Maximum Output Bandwidth",
+                                                "Subtitle": "bit/s"
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        },
+                                        {
+                                            "Header": {
+                                                "Title": "Maximum Input Bandwidth",
+                                                "Subtitle": "bit/s"
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        },
+                                        {
+                                            "Header": {
+                                                "Title": "Maximum RTT",
+                                                "Subtitle": "ms"
+                                            },
+                                            "LineChart": {
+                                                "Query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                                "yAxis": {
+                                                    "isLogarithmic": false,
+                                                    "units": {
+                                                        "baseUnitType": "",
+                                                        "baseUnit": "",
+                                                        "displayUnit": ""
+                                                    },
+                                                    "customLabel": ""
+                                                },
+                                                "NavigationSelect": {}
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "Id": "NotableQueriesBuilderBlade",
+                                "Type": "Blade",
+                                "Version": 0,
+                                "Configuration": {
+                                    "General": {
+                                        "title": "Session Query List",
+                                        "newGroup": false,
+                                        "preselectedFilters": "Type, Computer",
+                                        "renderMode": "grid"
+                                    },
+                                    "queries": [
+                                        {
+                                            "query": "ITPC_CTX_Session_CL | sort by TimeGenerated desc, UserName_s asc",
+                                            "displayName": "Connection List"
+                                        },
+                                        {
+                                            "query": "ITPC_CTX_Session_CL | distinct ClientName_s",
+                                            "displayName": "Client Station Names"
+                                        },
+                                        {
+                                            "query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc",
+                                            "displayName": "Session Output Bandwidth for a specific User"
+                                        },
+                                        {
+                                            "query": "ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc",
+                                            "displayName": "Session RTT for a specific User"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "Filters": [],
+                        "OverviewTile": {
+                            "Id": "SingleQueryDonutBuilderTileV1",
+                            "Type": "OverviewTile",
+                            "Version": 2,
+                            "Configuration": {
+                                "Donut": {
+                                    "Query": "ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
+                                    "CenterLegend": {
+                                        "Text": "Active",
+                                        "Operation": "Sum",
+                                        "ArcsToSelect": [
+                                            "Active"
+                                        ]
+                                    },
+                                    "Options": {
+                                        "colors": [
+                                            "#00188f",
+                                            "#0072c6",
+                                            "#00bcf2"
+                                        ],
+                                        "valueColorMapping": []
+                                    }
+                                },
+                                "Advanced": {
+                                    "DataFlowVerification": {
+                                        "Enabled": false,
+                                        "Query": "search *",
+                                        "Message": ""
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -19,8 +19,13 @@ After the deployment:
 - Decide if you will continue the Azure Monitor Agent in the community edition or if you want to run fully supported, including premium features, updates, and support for building KUSTO queries. Visit [sepago Shop](https://shop.sepago.de/product/?id=1E79F2B5-7514-4AEB-B092-63365BBAAE1E) for more information or get your special quote from [sales@sepago.de](mailto:sales@sepago.de).
 
 
+## Deploy a full Azure Monitor workspace for Windows Virtual Desktop to your Azure subscription
 
-## Deploy a full Azure Monitor workspace for RDS and Windows Virtual Desktop to your Azure subscription
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-WVD.json" target="_blank">
+​    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+## Deploy a full Azure Monitor workspace for RDS to your Azure subscription
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-RDS.json" target="_blank">
 ​    <img src="http://azuredeploy.net/deploybutton.png"/>
