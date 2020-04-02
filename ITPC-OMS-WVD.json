@@ -52,6 +52,7 @@
       "OMSViews":{
          "viewNames":[
             "Workspace.omsview",
+			"Licensing.omsview",
             "WVD-Processes.omsview",
             "WVD-Sessions.omsview",
             "WVD-Site-and-Applications.omsview",

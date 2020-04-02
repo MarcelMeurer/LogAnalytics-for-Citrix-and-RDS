@@ -52,6 +52,7 @@
       "OMSViews":{
          "viewNames":[
             "Workspace.omsview",
+			"Licensing.omsview",
             "Citrix-Processes.omsview",
             "Citrix-Sessions.omsview",
             "Citrix-Site-and-Applications.omsview",

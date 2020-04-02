@@ -52,6 +52,7 @@
       "OMSViews":{
          "viewNames":[
             "Workspace.omsview",
+			"Licensing.omsview",
             "RDS-Processes.omsview",
             "RDS-Sessions.omsview",
             "RDS-Site-and-Applications.omsview",
