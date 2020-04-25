@@ -119,7 +119,7 @@
                                     },
                                     "List": [
                                         {
-                                            "Title": "Let's make views!",
+                                            "Title": "Let's monitor!",
                                             "Content": "## License information\n\nThis version seems to be a community/test version of Azure Monitor for WVD. We are offering a supported version for a low rate to our customers on a per-user per-month base (0.60 cents per distinct user per month). The supported versions additionally can be configured via command line parameters and store the secrets encrypted in the registry. Additionally, we have a Power BI template to use the data.\nContact sales@sepago.de to get your quote.\n\n#### Get your [Links](mailto://sales@sepago.de \"quot\") \n\n"
                                         }
                                     ]
