@@ -16,7 +16,7 @@ After the deployment:
 - Set the retention time of your workspace (default: 360 days)
 - Test the agent and Azure Monitor
 - Analyze your data
-- Decide if you will continue the Azure Monitor Agent in the community edition (non-comercial use) or if you want to run fully supported, including premium features, updates, workbooks, and support for building KUSTO queries. Visit [sepago Shop](https://shop.sepago.de/product/?id=1E79F2B5-7514-4AEB-B092-63365BBAAE1E) for more information or get your special quote from [sales@sepago.de](mailto:sales@sepago.de).
+- We offer the Azure Monitoring Agent for testing and community purposes without any warranty nor support for non-commercial use. Please test the monitoring solution. For commercial use we offer licenses, including premium features, updates, and support for building KUSTO queries. Visit [sepago Shop](https://shop.sepago.de/product/?id=1E79F2B5-7514-4AEB-B092-63365BBAAE1E) for more information or get your special quote from [sales@sepago.de](mailto:sales@sepago.de).
 
 
 ## Deploy a full Azure Monitor workspace for Windows Virtual Desktop to your Azure subscription
