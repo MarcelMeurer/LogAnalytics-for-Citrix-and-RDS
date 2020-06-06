@@ -25,7 +25,7 @@
             "name": "[concat(parameters('workspace'),'1')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",
-            "id": "[resourceId('Microsoft.OperationalInsights/workspaces', concat(parameters('workspace'),'1'))]",
+            "id": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace'))]",
             "resources": [
                 {
                     "apiVersion": "2015-11-01-preview",
