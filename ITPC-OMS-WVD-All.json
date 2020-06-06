@@ -79,7 +79,7 @@
             "name": "[parameters('workspace')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",
-            "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
+            "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]",
 	        "properties": {
 			  "sku": { "Name": "Standalone" },
 			  "retentionInDays": 360
@@ -90,9 +90,9 @@
                     "name": "License overview",
                     "type": "views",
                     "location": "[parameters('location')]",
-                    "id": "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/License overview')]",
+                    "id": "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'),'/views/License overview')]",
                     "dependson": [
-                        "[Concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
+                        "[Concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('resourcegroup'), '/providers/Microsoft.OperationalInsights/workspaces/', parameters('workspace'))]"
                     ],
                     "properties": {
                         "Id": "License overview",
