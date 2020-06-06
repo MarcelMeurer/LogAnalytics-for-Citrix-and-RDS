@@ -22,10 +22,10 @@
     "resources": [
         {
             "apiVersion": "2017-04-26-preview",
-            "name": "[parameters('workspace')]",
+            "name": "[concat(parameters('workspace'),'1')]",
             "type": "Microsoft.OperationalInsights/workspaces",
             "location": "[parameters('location')]",
-            "id": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspace'))]",
+            "id": "[resourceId('Microsoft.OperationalInsights/workspaces', concat(parameters('workspace'),'1'))]",
             "resources": [
                 {
                     "apiVersion": "2015-11-01-preview",
