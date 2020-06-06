@@ -83,8 +83,8 @@
 	        "properties": {
 			  "sku": { "Name": "Standalone" },
 			  "retentionInDays": 360
-			}   
-        },
+			},
+            "resources": [
 		                {
                     "apiVersion": "2015-11-01-preview",
                     "name": "License overview",
@@ -2372,6 +2372,10 @@
                     }
                 }
 
+
+
+]			
+        }
 
 
 
