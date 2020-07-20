@@ -2,11 +2,41 @@
    "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
    "contentVersion":"1.0.0.0",
    "parameters":{
-      "workspace":{
-         "type":"string"
-      },
       "location":{
-         "type":"string"
+         "type":"string",
+         "allowedValues":[
+            "Australia Southeast",
+            "Australia East",
+            "Australia Southeast",
+            "Central US",
+            "East US",
+            "East US 2",
+            "North Central US",
+            "South Central US",
+            "West Central US",
+            "West US",
+            "West US 2",
+            "South Africa North",
+            "East Asia",
+            "Southeast Asia",
+            "UK South",
+            "UK West",
+            "Japan East",
+            "Southeast Asia",
+            "West Europe",
+            "North Europe",
+            "France Central",
+            "Central India",
+            "Korea Central",
+            "Switzerland North",
+            "Canada Central",
+            "China East 2"
+         ],
+         "defaultValue":"West Europe"
+      },
+      "workspace":{
+         "type":"string",
+         "defaultValue":"enterAuniqueDnsHostName"
       }
    },
    "resources":[
