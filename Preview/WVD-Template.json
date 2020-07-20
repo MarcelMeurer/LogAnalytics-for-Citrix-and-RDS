@@ -1,0 +1,2046 @@
+{
+   "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+   "contentVersion":"1.0.0.0",
+   "parameters":{
+      "workspace":{
+         "type":"string"
+      },
+      "location":{
+         "type":"string"
+      }
+   },
+   "resources":[
+      {
+         "apiVersion":"2019-05-01",
+         "name":"pid-829f34d0-ff76-42d3-b46f-f527d50ff819",
+         "type":"Microsoft.Resources/deployments",
+         "subscriptionId":"[subscription().subscriptionId]",
+         "resourceGroup":"[resourceGroup().name]",
+         "properties":{
+            "mode":"Incremental",
+            "template":{
+               "$schema":"https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+               "contentVersion":"1.0.0.0",
+               "resources":[
+               ]
+            }
+         }
+      },
+      {
+         "apiVersion":"2020-03-01-preview",
+         "name":"[concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId))]",
+         "type":"Microsoft.OperationalInsights/workspaces",
+         "location":"[parameters('location')]",
+		 "id":"[resourceId('Microsoft.OperationalInsights/workspaces',concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)))]",
+         "properties":{
+            "sku":{
+               "Name":"Standalone"
+            },
+            "retentionInDays":360
+         },
+         "resources":[
+            {
+               "apiVersion":"2020-03-01-preview",
+               "name":"License overview",
+               "type":"views",
+               "location":"[parameters('location')]",
+               "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views',concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'License overview')]",
+               "dependson":[
+                  "[resourceId('Microsoft.OperationalInsights/workspaces',concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)))]"
+               ],
+               "properties":{
+                  "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views',concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'License overview')]",
+                  "Name":"License overview",
+                  "Author":"marcel.meurer@sepago.de",
+                  "Source":"Local",
+                  "Version":2,
+                  "Dashboard":[
+                     {
+                        "Id": "[if(equals('1', '1'),'NumberTileListBuilderBlade','NumberTileListBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"License",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Tile":{
+                              "Legend":"Needed licenses for the selected time frame per month",
+                              "Query":"ITPC_CTX_Session_CL|distinct UserName_s| count"
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Session_CL | where TimeGenerated > startofmonth(ago(180d)) | extend MonthYear=strcat(getyear(TimeGenerated),\".\",getmonth(TimeGenerated)) | summarize DistinctUsers=dcount(UserName_s) by MonthYear | order by MonthYear desc",
+                              "HideGraph":false,
+                              "enableSparklines":false,
+                              "ColumnsTitle":{
+                                 "Name":"Year.Month",
+                                 "Value":"Needed Licenses"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item} | sort by TimeGenerated desc",
+                              "NavigationSelect":{
+                                 "NavigationQuery":"search {selected item} | sort by TimeGenerated desc"
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'InformationBlade','InformationBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "Title":"License",
+                              "NewGroup":false,
+                              "Color":"#0072c6"
+                           },
+                           "Header":{
+                              "Image":"data:image/png;base64,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",
+                              "Label":"Information Part",
+                              "Link":{
+                                 "Label":"More info",
+                                 "Url":"https://www.sepago.de/en/wvd-value-add-tools/"
+                              }
+                           },
+                           "List":[
+                              {
+                                 "Title":"Let's monitor!",
+                                 "Content":"## License information\n\nThis version seems to be a community/test version of Azure Monitor for WVD. We are offering a supported version for a low rate to our customers on a per-user per-month base (0.60 cents per distinct user per month). The supported versions additionally can be configured via command line parameters and store the secrets encrypted in the registry. Additionally, we have a Power BI template to use the data.\nContact sales@sepago.de to get your quote.\n\n#### Get your [Links](mailto://sales@sepago.de \"quot\") \n\n"
+                              }
+                           ]
+                        }
+                     }
+                  ],
+                  "OverviewTile":{
+                     "Id": "[if(equals('1', '1'),'SingleNumberBuilderTile','SingleNumberBuilderTile')]",
+                     "Type":"OverviewTile",
+                     "Version":2,
+                     "Configuration":{
+                        "Tile":{
+                           "Legend":"Needed licenses for the selected time frame per month (sales@sepago.de)",
+                           "Query":"ITPC_CTX_Session_CL | distinct UserName_s | count"
+                        },
+                        "Advanced":{
+                           "DataFlowVerification":{
+                              "Enabled":false,
+                              "Query":"search * | limit 1 | project TimeGenerated"
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            {
+               "apiVersion":"2020-03-01-preview",
+               "name":"WVD Processes",
+               "type":"views",
+               "location":"[parameters('location')]",
+               "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Processes')]",
+               "dependson":[
+                  "[resourceId('Microsoft.OperationalInsights/workspaces', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)))]"
+               ],
+               "properties":{
+                  "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Processes')]",
+                  "Name":"WVD Processes",
+                  "Author":"marcel.meurer@sepago.de",
+                  "Source":"Local",
+                  "Version":2,
+                  "Dashboard":[
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Reported Processes",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Processes by Worker",
+                              "Subtitle":"count"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | summarize AggregatedValue = dcount(NameInSession_s) by Worker_s",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | summarize AggregatedValue = dcount(NameInSession_s) by Worker_s | sort by Worker_s asc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"Count"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item} | sort by TimeGenerated desc",
+                              "NavigationSelect":{
+                                 "NavigationQuery":"search {selected item} | sort by TimeGenerated desc"
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Process CPU Consumption (Avg)",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall by Process Name",
+                              "Subtitle":"% CPU"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(PercentProcessorTime_d) by Name_s",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Last Sample"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(PercentProcessorTime_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Name",
+                                 "Value":"%"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize CPU_Perc = avg(PercentProcessorTime_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Process CPU Consumption (Max)",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall by Process Name",
+                              "Subtitle":"% CPU"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(PercentProcessorTime_d) by Name_s",
+                              "Callout":{
+                                 "Title":"Max",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(PercentProcessorTime_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Name",
+                                 "Value":"%"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize CPU_Perc = max(PercentProcessorTime_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Process Memory Consumption Phy (Avg)",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall by Process Name",
+                              "Subtitle":"Byte"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(WorkingSet_d) by Name_s",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(WorkingSet_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Name",
+                                 "Value":"Byte"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize Memory_Byte = avg(WorkingSet_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Process Memory Consumption Phy (Max)",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall by Process Name"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(WorkingSet_d) by Name_s",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(WorkingSet_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Name",
+                                 "Value":"Byte"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize Memory_Byte = max(WorkingSet_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Process IO Activity (Avg)",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall by Process name",
+                              "Subtitle":"Byte/s"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(IODataBytesPersec_d) by Name_s",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Last Sample"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = avg(IODataBytesPersec_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Name",
+                                 "Value":"Byte/s"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize IO_BpS = avg(IODataBytesPersec_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Process IO Activity (Max)",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall by Process name",
+                              "Subtitle":"Byte/s"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(IODataBytesPersec_d) by Name_s",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = max(IODataBytesPersec_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Name",
+                                 "Value":"byte/s"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize IO_BpS = max(IODataBytesPersec_d) by UserName_s, Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     }
+                  ],
+                  "OverviewTile":{
+                     "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderTileV1','SingleQueryDonutBuilderTileV1')]",
+                     "Type":"OverviewTile",
+                     "Version":2,
+                     "Configuration":{
+                        "Donut":{
+                           "Query":"ITPC_CTX_Process_CL | summarize AggregatedValue = dcount(NameInSession_s) by Worker_s | sort by AggregatedValue desc",
+                           "CenterLegend":{
+                              "Text":"Total",
+                              "Operation":"Sum"
+                           },
+                           "Options":{
+                              "colors":[
+                                 "#00188f",
+                                 "#0072c6",
+                                 "#00bcf2"
+                              ]
+                           }
+                        },
+                        "Advanced":{
+                           "DataFlowVerification":{
+                              "Enabled":false,
+                              "Query":"search *"
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            {
+               "apiVersion":"2020-03-01-preview",
+               "name":"WVD Sessions",
+               "type":"views",
+               "location":"[parameters('location')]",
+               "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Sessions')]",
+               "dependson":[
+                  "[resourceId('Microsoft.OperationalInsights/workspaces', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)))]"
+               ],
+               "properties":{
+                  "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Sessions')]",
+                  "Name":"WVD Sessions",
+                  "Author":"marcel.meurer@sepago.de",
+                  "Source":"Local",
+                  "Version":2,
+                  "Dashboard":[
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderBladeV1','SingleQueryDonutBuilderBladeV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"WVD Sessions",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"WVD Sessions",
+                              "Subtitle":"Unique Sessions State"
+                           },
+                           "Donut":{
+                              "Query":"ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
+                              "CenterLegend":{
+                                 "Text":"Total",
+                                 "Operation":"Sum"
+                              },
+                              "Options":{
+                                 "colors":[
+                                    "#00188f",
+                                    "#0072c6",
+                                    "#00bcf2"
+                                 ]
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Terminal Services\" and Counter_s == \"Active Sessions\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"Active Sessions"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"20",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"40",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item} | sort by TimeGenerated desc",
+                              "NavigationSelect":{
+                                 "NavigationQuery":"search {selected item} | sort by TimeGenerated desc"
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Session Output Bandwidth",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Average Bandwidth per Worker",
+                              "Subtitle":"bit/s"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg ",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"User",
+                                 "Value":"bit/s"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"200000",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"1000000",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Session Input Bandwidth",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Average Bandwidth per Worker",
+                              "Subtitle":"bit/s"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"User",
+                                 "Value":"bit/s"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Session TCP RTT",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Average RTT per Worker",
+                              "Subtitle":"ms"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"User",
+                                 "Value":"ms"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"350",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"600",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Session Output TCP Line Speed",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Average Output Line Speed per Worker",
+                              "Subtitle":"bit/s"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" and Instance_s != \"_Server Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" | summarize AggregatedValue = avg(value_d) by UserName_s, Worker_s | sort by AggregatedValue desc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"User",
+                                 "Value":"Count"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Error",
+                                       "threshold":"Default",
+                                       "color":"#ba141a",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"1000000",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"2000000",
+                                       "color":"#009e49",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_PerfData_CL) {selected item} and Category == \"RemoteFX Network\" and Counter_s == \"Current TCP Bandwidth\" | summarize AggregatedValue = avg(value_d) by bin(TimeGenerated, 5m) | sort by TimeGenerated desc"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutStackedBuilderBlade','LineChartCalloutStackedBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Session Maximum Values",
+                              "newGroup":true
+                           },
+                           "charts":[
+                              {
+                                 "Header":{
+                                    "Title":"Maximum Output Bandwidth",
+                                    "Subtitle":"bit/s"
+                                 },
+                                 "LineChart":{
+                                    "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                    "yAxis":{
+                                       "isLogarithmic":false
+                                    }
+                                 }
+                              },
+                              {
+                                 "Header":{
+                                    "Title":"Maximum Input Bandwidth",
+                                    "Subtitle":"bit/s"
+                                 },
+                                 "LineChart":{
+                                    "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Received Rate\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                    "yAxis":{
+                                       "isLogarithmic":false
+                                    }
+                                 }
+                              },
+                              {
+                                 "Header":{
+                                    "Title":"Maximum RTT",
+                                    "Subtitle":"ms"
+                                 },
+                                 "LineChart":{
+                                    "Query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" | summarize AggregatedValue = max(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                                    "yAxis":{
+                                       "isLogarithmic":false
+                                    }
+                                 }
+                              }
+                           ]
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'NotableQueriesBuilderBlade','NotableQueriesBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Session Query List",
+                              "newGroup":false,
+                              "preselectedFilters":"Type, Computer",
+                              "renderMode":"grid"
+                           },
+                           "queries":[
+                              {
+                                 "query":"ITPC_CTX_Session_CL | sort by TimeGenerated desc, UserName_s asc",
+                                 "displayName":"Connection List"
+                              },
+                              {
+                                 "query":"ITPC_CTX_Session_CL | distinct ClientName_s",
+                                 "displayName":"Client Station Names"
+                              },
+                              {
+                                 "query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Total Sent Rate\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc",
+                                 "displayName":"Session Output Bandwidth for a specific User"
+                              },
+                              {
+                                 "query":"ITPC_CTX_PerfData_CL | where Category == \"RemoteFX Network\" and Counter_s == \"Current TCP RTT\" and UserName_s == \"mmeurer\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 30m) | sort by TimeGenerated desc",
+                                 "displayName":"Session RTT for a specific User"
+                              }
+                           ]
+                        }
+                     }
+                  ],
+                  "OverviewTile":{
+                     "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderTileV1','SingleQueryDonutBuilderTileV1')]",
+                     "Type":"OverviewTile",
+                     "Version":2,
+                     "Configuration":{
+                        "Donut":{
+                           "Query":"ITPC_CTX_Session_CL | summarize AggregatedValue = dcount(SessionHash_s) by ConnectionState_s | sort by AggregatedValue desc",
+                           "CenterLegend":{
+                              "Text":"Active",
+                              "Operation":"Sum",
+                              "ArcsToSelect":[
+                                 "Active"
+                              ]
+                           },
+                           "Options":{
+                              "colors":[
+                                 "#00188f",
+                                 "#0072c6",
+                                 "#00bcf2"
+                              ]
+                           }
+                        },
+                        "Advanced":{
+                           "DataFlowVerification":{
+                              "Enabled":false,
+                              "Query":"search *"
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            {
+               "apiVersion":"2020-03-01-preview",
+               "name":"WVD Site and Applications",
+               "type":"views",
+               "location":"[parameters('location')]",
+               "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Site and Applications')]",
+               "dependson":[
+                  "[resourceId('Microsoft.OperationalInsights/workspaces', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)))]"
+               ],
+               "properties":{
+                  "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Site and Applications')]",
+                  "Name":"WVD Site and Applications",
+                  "Author":"marcel.meurer@sepago.de",
+                  "Source":"Local",
+                  "Version":2,
+                  "Dashboard":[
+                     {
+                        "Id": "[if(equals('1', '1'),'NumberTileListBuilderBlade','NumberTileListBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"WVD Host Pool",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Tile":{
+                              "Legend":"Unique User",
+                              "Query":"ITPC_CTX_Session_CL | distinct UserName_s| where UserName_s !=\"\"| count"
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Session_CL | where UserName_s !=\"\" | summarize Count = dcount(UserName_s) by DesktopGroup_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "ColumnsTitle":{
+                                 "Name":"DesktopGroup",
+                                 "Value":"Count"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item} | sort by TimeGenerated desc",
+                              "NavigationSelect":{
+                                 "NavigationQuery":"search {selected item} | sort by TimeGenerated desc"
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'NumberTileListBuilderBlade','NumberTileListBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Applications",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Tile":{
+                              "Query":"ITPC_CTX_Application_CL | where Event_s == \"crashed\" | summarize AggregatedValue = count() by Name_s\r\n| count",
+                              "Legend":"Application Crashed"
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Application_CL | where Event_s == \"crashed\" | summarize AggregatedValue = count() by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Application",
+                                 "Value":"Count"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderTileV1','SingleQueryDonutBuilderTileV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Application by User",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Processor usage",
+                              "Subtitle":"%"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Processor Information\" and Counter_s == \"% Processor Time\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\" | summarize AggregatedValue = avg(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Username",
+                                 "Value":"%"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize AggregatedValue = max(PercentProcessorTime_d) by UserName_s, Worker_s, Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderTileV1','SingleQueryDonutBuilderTileV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Application by User",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Memory available",
+                              "Subtitle":"Byte"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Memory\" and Counter_s == \"Available Bytes\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\" | summarize AggregatedValue = avg(WorkingSet_d) by UserName_s, Worker_s, Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Username",
+                                 "Value":"Byte"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} | summarize AggregatedValue = max(WorkingSet_d) by UserName_s, Worker_s, Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderBladeV1','SingleQueryDonutBuilderBladeV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Application Overall Consumption",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Processor Consumption",
+                              "Subtitle":"Shared Ticks"
+                           },
+                           "Donut":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s | sort by AggregatedValue desc",
+                              "CenterLegend":{
+                                 "Text":"Total",
+                                 "Operation":"Sum"
+                              },
+                              "Options":{
+                                 "colors":[
+                                    "#00188f",
+                                    "#0072c6",
+                                    "#00bcf2"
+                                 ]
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\"  and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":false,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Process",
+                                 "Value":"S-Ticks"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderBladeV1','SingleQueryDonutBuilderBladeV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Application Overall Consumption",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Memory Consumption",
+                              "Subtitle":"Memory Ticks"
+                           },
+                           "Donut":{
+                              "Query":"ITPC_CTX_Process_CL | where Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s | sort by AggregatedValue desc",
+                              "CenterLegend":{
+                                 "Text":"Total",
+                                 "Operation":"Sum"
+                              },
+                              "Options":{
+                                 "colors":[
+                                    "#00188f",
+                                    "#0072c6",
+                                    "#00bcf2"
+                                 ]
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\"  and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s",
+                              "HideGraph":false,
+                              "enableSparklines":false,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Process",
+                                 "Value":"M-nTicks"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderBladeV1','SingleQueryDonutBuilderBladeV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"User Overall Consumption",
+                              "newGroup":true,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Processor Consumption",
+                              "Subtitle":"Shared Ticks"
+                           },
+                           "Donut":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\"  and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s | sort by AggregatedValue desc",
+                              "CenterLegend":{
+                                 "Text":"Total",
+                                 "Operation":"Sum"
+                              },
+                              "Options":{
+                                 "colors":[
+                                    "#00188f",
+                                    "#0072c6",
+                                    "#00bcf2"
+                                 ]
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\"  and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by UserName_s",
+                              "HideGraph":false,
+                              "enableSparklines":false,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"User",
+                                 "Value":"S-Ticks"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize AggregatedValue = sum(PercentProcessorTime_d) by Name_s"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'SingleQueryDonutBuilderBladeV1','SingleQueryDonutBuilderBladeV1')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"USER OVERALL CONSUMPTION",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"User Consumption",
+                              "Subtitle":"Memory Ticks"
+                           },
+                           "Donut":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\" and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s | sort by AggregatedValue desc",
+                              "CenterLegend":{
+                                 "Text":"Total",
+                                 "Operation":"Sum"
+                              },
+                              "Options":{
+                                 "colors":[
+                                    "#00188f",
+                                    "#0072c6",
+                                    "#00bcf2"
+                                 ]
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\" and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by UserName_s",
+                              "HideGraph":false,
+                              "enableSparklines":false,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"User",
+                                 "Value":"M-Ticks"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | extend WorkingSetN = (WorkingSet_d * 0.0000000001) | summarize AggregatedValue = sum(WorkingSetN) by Name_s"
+                           }
+                        }
+                     }
+                  ],
+                  "OverviewTile":{
+                     "Id": "[if(equals('1', '1'),'SingleNumberBuilderTile','SingleNumberBuilderTile')]",
+                     "Type":"OverviewTile",
+                     "Version":2,
+                     "Configuration":{
+                        "Tile":{
+                           "Legend":"Unique Users",
+                           "Query":"ITPC_CTX_Process_CL | where UserName_s !=\"\" | distinct UserName_s| count"
+                        },
+                        "Advanced":{
+                           "DataFlowVerification":{
+                              "Enabled":false,
+                              "Query":"search *"
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            {
+               "apiVersion":"2020-03-01-preview",
+               "name":"WVD Session Hosts",
+               "type":"views",
+               "location":"[parameters('location')]",
+               "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Session Hosts')]",
+               "dependson":[
+                  "[resourceId('Microsoft.OperationalInsights/workspaces', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)))]"
+               ],
+               "properties":{
+                  "id":"[resourceId('Microsoft.OperationalInsights/workspaces/views', concat(parameters('workspace'),'-', uniqueString(resourceGroup().id,subscription().subscriptionId)),'WVD Session Hosts')]",
+                  "Name":"WVD Session Hosts",
+                  "Author":"marcel.meurer@sepago.de",
+                  "Source":"Local",
+                  "Version":2,
+                  "Dashboard":[
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"CPU Consumption",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Overall CPU Consumption",
+                              "Subtitle":"%"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Processor Information\" and Counter_s == \"% Processor Time\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Processor Information\" and Counter_s == \"% Processor Time\" | summarize AggregatedValue = avg(value_d) by Worker_s | sort by Worker_s asc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"%"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"85",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"92",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item} | sort by TimeGenerated desc",
+                              "NavigationSelect":{
+                                 "NavigationQuery":"search {selected item} | sort by TimeGenerated desc"
+                              }
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Memory Consumption",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Memory free",
+                              "Subtitle":"Availaible bytes"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Memory\" and Counter_s == \"Available Bytes\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Memory\" and Counter_s == \"Available Bytes\" | summarize AggregatedValue = avg(value_d) by Worker_s | sort by Worker_s asc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"Bytes free"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Error",
+                                       "threshold":"Default",
+                                       "color":"#ba141a",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"100000000",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"1000000000",
+                                       "color":"#009e49",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize Memory_Byte = avg(WorkingSet_d) by Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Network",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Network Throughput",
+                              "Subtitle":"byte/s"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Network Adapter\" and Counter_s == \"Bytes Total/sec\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Network Adapter\" and Counter_s == \"Bytes Total/sec\" | summarize AggregatedValue = avg(value_d) by Worker_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"byte/s"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"2000000",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"10000000",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize IO_BpS = avg(IODataBytesPersec_d) by Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Processor Queue",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Length",
+                              "Subtitle":"#"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"System\" and Counter_s == \"Processor Queue Length\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"System\" and Counter_s == \"Processor Queue Length\" | summarize AggregatedValue = avg(value_d) by Worker_s | sort by Worker_s asc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"#"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"6",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"12",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize CPU_Perc = avg(PercentProcessorTime_d), Mem_Byte = avg(WorkingSet_d) by Name_s"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Disk Queue",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Length",
+                              "Subtitle":"#"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"PhysicalDisk\" and Counter_s == \"Avg. Disk Queue Length\" and Instance_s == \"_Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"PhysicalDisk\" and Counter_s == \"Avg. Disk Queue Length\" and Instance_s == \"_Total\" | summarize AggregatedValue = avg(value_d) by Worker_s | sort by Worker_s asc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"#"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"0.8",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"1.8",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search in (ITPC_CTX_Process_CL) {selected item} and Name_s != \"System Idle Process\" | summarize IO_BpS = avg(IODataBytesPersec_d) by Name_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'LineChartCalloutBuilderBlade','LineChartCalloutBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Paging File",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Header":{
+                              "Title":"Usage",
+                              "Subtitle":"%"
+                           },
+                           "LineChart":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Paging File\" and Counter_s == \"% Usage\" and Instance_s == \"_Total\" | summarize AggregatedValue = avg(value_d) by Worker_s, bin(TimeGenerated, 1h) | sort by TimeGenerated desc | render timechart",
+                              "Callout":{
+                                 "Title":"Avg",
+                                 "Operation":"Average"
+                              },
+                              "yAxis":{
+                                 "isLogarithmic":false
+                              }
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | where Category == \"Paging File\" and Counter_s == \"% Usage\" and Instance_s == \"_Total\" | summarize AggregatedValue = avg(value_d) by Worker_s | sort by Worker_s asc",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "operation":"Summary",
+                              "ColumnsTitle":{
+                                 "Name":"Worker",
+                                 "Value":"%"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":true,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"70",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item}"
+                           }
+                        }
+                     },
+                     {
+                        "Id": "[if(equals('1', '1'),'NumberTileListBuilderBlade','NumberTileListBuilderBlade')]",
+                        "Type":"Blade",
+                        "Version":0,
+                        "Configuration":{
+                           "General":{
+                              "title":"Desktop Groups",
+                              "newGroup":false,
+                              "useIcon":false
+                           },
+                           "Tile":{
+                              "Legend":"Worker Count",
+                              "Query":"ITPC_CTX_PerfData_CL | distinct Worker_s| count"
+                           },
+                           "List":{
+                              "Query":"ITPC_CTX_PerfData_CL | summarize AggregatedValue = dcount(Worker_s) by DesktopGroup_s",
+                              "HideGraph":false,
+                              "enableSparklines":true,
+                              "ColumnsTitle":{
+                                 "Name":"DesktopGroup",
+                                 "Value":"#"
+                              },
+                              "Color":"#0072c6",
+                              "thresholds":{
+                                 "isEnabled":false,
+                                 "values":[
+                                    {
+                                       "name":"Normal",
+                                       "threshold":"Default",
+                                       "color":"#009e49",
+                                       "isDefault":true
+                                    },
+                                    {
+                                       "name":"Warning",
+                                       "threshold":"60",
+                                       "color":"#fcd116",
+                                       "isDefault":false
+                                    },
+                                    {
+                                       "name":"Error",
+                                       "threshold":"90",
+                                       "color":"#ba141a",
+                                       "isDefault":false
+                                    }
+                                 ]
+                              },
+                              "NavigationQuery":"search {selected item} | sort by TimeGenerated desc",
+                              "NavigationSelect":{
+                                 "NavigationQuery":"search {selected item} | sort by TimeGenerated desc"
+                              }
+                           }
+                        }
+                     }
+                  ],
+                  "OverviewTile":{
+                     "Id": "[if(equals('1', '1'),'SingleNumberBuilderTile','SingleNumberBuilderTile')]",
+                     "Type":"OverviewTile",
+                     "Version":2,
+                     "Configuration":{
+                        "Tile":{
+                           "Legend":"Are reporting to Log Analytics",
+                           "Query":"ITPC_CTX_PerfData_CL | where Worker_s!=\"\" | distinct Worker_s| count"
+                        },
+                        "Advanced":{
+                           "DataFlowVerification":{
+                              "Enabled":true,
+                              "Query":"ITPC_CTX_PerfData_CL | count",
+                              "Message":"There are no data at this time. Make sure that you have installed the agents (http://loganalytics.sepago.com).\n\nKeep in mind that after the first time data arrived to Log Analytics it takes some time (up to hours) to build the data scheme."
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         ]
+      }
+   ]
+}

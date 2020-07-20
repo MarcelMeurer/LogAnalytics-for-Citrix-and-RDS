@@ -25,6 +25,12 @@ After the deployment:
 ​    <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+## Deploy a full Azure Monitor workspace for Windows Virtual Desktop to your Azure subscription - Preview
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FPreview%2FWVD-Template.json" target="_blank">
+​    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
 ## Deploy a full Azure Monitor workspace for RDS to your Azure subscription
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-RDS.json" target="_blank">
