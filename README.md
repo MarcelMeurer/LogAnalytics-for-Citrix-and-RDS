@@ -19,31 +19,24 @@ After the deployment:
 - We offer the Azure Monitoring Agent for testing and community purposes without any warranty nor support for non-commercial use. Please test the monitoring solution. For commercial use we offer licenses, including premium features, updates, and support for building KUSTO queries. Visit [sepago Shop](https://shop.sepago.de/product/?id=1E79F2B5-7514-4AEB-B092-63365BBAAE1E) for more information or get your special quote from [sales@sepago.de](mailto:sales@sepago.de).
 
 
-## Deploy a full Azure Monitor workspace for Windows Virtual Desktop to your Azure subscription
+## Deploy a full Azure Monitor workspace for Windows Virtual Desktop incl. Azure Workbooks to your Azure subscription (Azure Global and Azure US Government)
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-WVD-All.json" target="_blank">
-​    <img src="http://azuredeploy.net/deploybutton.png"/>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix-and-RDS%2Fmaster%2FDeployments%2FWVD%2FmainTemplate.json/createUIDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix-and-RDS%2Fmaster%2FDeployments%2FWVD%2FcreateUiDefinition.json" target="_blank">
+​    <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
 
-## Deploy a full Azure Monitor workspace for Windows Virtual Desktop to your Azure subscription - Preview
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FPreview%2FWVD-Template.json" target="_blank">
-​    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
 
-## Deploy a full Azure Monitor workspace for RDS to your Azure subscription
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-RDS.json" target="_blank">
-​    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
+
 
 ## Deploy a full Azure Monitor for Citrix to your Azure subscription
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FMarcelMeurer%2FLogAnalytics-for-Citrix%2Fmaster%2FITPC-OMS-Citrix.json" target="_blank">
-​    <img src="http://azuredeploy.net/deploybutton.png"/>
+​    <img src="https://aka.ms/deploytoazurebutton"/>
 </a>
 
 
 
-## **New:** Deploy the Azure Monitor solution directly from the Azure Marketplace:
+## Deploy the Azure Monitor solution directly from the Azure Marketplace:
 
 [Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=sepago%20gmbh)
