@@ -1,0 +1,29 @@
+{
+   "$schema":"https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+   "handler":"Microsoft.Compute.MultiVm",
+   "version":"0.1.2-preview",
+   "parameters":{
+      "resourceTypes":[
+         "Microsoft.OperationalInsights/workspaces"
+      ],
+      "basics":[
+         {
+            "name":"workspace",
+            "type":"Microsoft.Common.TextBox",
+            "label":"Name of your Azure Monitor workspace",
+            "toolTip":"The workspace name should include 1-49 letters, digits or '-'. The '-' shouldn't be the first symbol. The name will be appended by a unique identifier.",
+            "constraints":{
+               "required":true,
+               "regex":"^[a-z0-9A-Z]{1}[a-z0-9A-Z-]{0,48}$",
+               "validationMessage":"The workspace name should include 1-49 letters, digits or '-'. The '-' shouldn't be the first symbol. The name will be appended by a unique identifier."
+            }
+         }
+      ],
+      "steps":[
+      ],
+      "outputs":{
+		 "location":"[location()]",
+         "workspace": "[basics('workspace')]"
+      }
+   }
+}
