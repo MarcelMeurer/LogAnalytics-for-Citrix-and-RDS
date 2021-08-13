@@ -4,7 +4,7 @@ This solution monitors each worker in your RDS, WVD or Citrix environment. The a
 
 The agents combine data from different sources and send them to your OMS Log Analytics workspace in Azure. There is no other infrastructure needed: No SQL server, no windows server. Nothing else! The data are saved and analyzed in Azure.
 
-
+Note: The legal owner of this solution is sepago Gmbh, Dillenburger Str. 83, 51105 Cologne, Germany - https://www.sepago.com
 
 Go to [http://loganalytics.sepago.com](http://loganalytics.sepago.com) to download the agent and learn more.
 
